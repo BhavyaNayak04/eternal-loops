@@ -1,0 +1,16 @@
+import axios from "axios";
+import { Product } from "@/types/index";
+
+export async function fetchProdcuctDetails(id: string): Promise<Product[]> {
+  try {
+    const response = await axios.get(
+      `http://localhost:5000/api/products/get/${id}`
+    );
+    console.log("Product details response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
+}
+
