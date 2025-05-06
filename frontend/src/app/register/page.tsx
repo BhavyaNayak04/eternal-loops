@@ -36,7 +36,7 @@ export default function RegisterPage() {
 
       // Short delay before redirect for better UX
       setTimeout(() => {
-        router.push("/signin");
+        router.push("/");
       }, 1500);
     } catch (error: unknown) {
       setMessageType("error");

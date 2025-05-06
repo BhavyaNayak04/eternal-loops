@@ -1,11 +1,10 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/home/Footer";
 
-// Sample product data - you would replace this with actual data from your backend/CMS
 const products = [
   {
     id: 1,
@@ -527,7 +526,7 @@ export default function Shop() {
       </div>
 
       {/* Newsletter - Simplified version for Shop page */}
-      <Footer/>
+      <Footer />
 
       {/* Footer would be here */}
     </div>
