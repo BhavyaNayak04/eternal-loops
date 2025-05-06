@@ -1,0 +1,72 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Logs
+logs/
+*.log
+*.log.*
+/log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build output
+/build
+/dist
+/.next
+/out
+.next/cache
+
+# Static files
+/public/static/
+*.lock
+
+# Coverage reports
+coverage/
+*.lcov
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*.bak
+
+# Debugging files
+*.stackdump
+
+# Miscellaneous
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Backend-specific
+/backend-els/node_modules/
+backend-els/.env
+
+# Frontend-specific
+/frontend/node_modules/
+frontend/.env
+frontend/.next
+frontend/out
+
+# Ignore build artifacts
+*.tsbuildinfo
+
+frontend/.next/cache
+frontend/.env
