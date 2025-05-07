@@ -1,12 +1,12 @@
 // Product.tsx
-import { Products } from "@/types";
+import { Product } from "@/types/index";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Product({
+export default function ProductDetails({
   sortedProducts,
 }: {
-  sortedProducts: Products[];
+  sortedProducts: Product[];
 }) {
   if (sortedProducts.length === 0) {
     return (

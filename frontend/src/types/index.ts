@@ -3,10 +3,10 @@ export interface Product {
   name: string;
   description: string;
   image: string;
-  tag: string;
+  tag?: string;
   price: number;
-  inStock: boolean;
-  quantity: number;
+  inStock?: boolean;
+  quantity?: number;
 }
 
 export const categories = [
@@ -155,3 +155,50 @@ export const navigation = {
     { name: "FAQs", href: "/faq" },
   ],
 };
+
+
+export const featuredProducts = [
+    {
+      _id: 1,
+      name: "Cozy Blanket",
+      price: "$89.99",
+      image: "/blanket.webp",
+      description:
+        "Hand-crocheted with premium merino wool for ultimate comfort.",
+    },
+    {
+      _id: 2,
+      name: "Baby Booties",
+      price: "$24.99",
+      image: "/booties.webp",
+      description: "Adorable soft booties perfect for newborns and infants.",
+    },
+    {
+      _id: 3,
+      name: "Amigurumi Bunny",
+      price: "$32.99",
+      image: "/bunny.webp",
+      description: "Charming handmade stuffed bunny, perfect as a gift.",
+    },
+  ];
+
+  export const testimonials = [
+    {
+      id: 1,
+      name: "Sarah L.",
+      text: "The blanket I ordered is absolutely stunning. The attention to detail is remarkable!",
+      rating: 5,
+    },
+    {
+      id: 2,
+      name: "Michael T.",
+      text: "I bought a crochet toy for my daughter and she hasn't put it down since. Beautiful craftsmanship!",
+      rating: 5,
+    },
+    {
+      id: 3,
+      name: "Emma R.",
+      text: "The custom scarf exceeded my expectations. So warm and the colors are gorgeous!",
+      rating: 5,
+    },
+  ];

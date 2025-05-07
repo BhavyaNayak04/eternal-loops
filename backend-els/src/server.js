@@ -1,9 +1,10 @@
 import express from "express";
 import mongoose from "mongoose";
-import cors from "cors"; // Import cors
+import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import dotenv from "dotenv";
-import productRoutes from "./routes/productRoutes.js"; // Import product routes
+import productRoutes from "./routes/productRoutes.js";
+import newsLetterRoutes from "./routes/newsLetterRoutes.js";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/newsletter", newsLetterRoutes);
 
 // Connect to MongoDB
 mongoose
