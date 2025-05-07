@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Product } from "@/types/index";
 
-export async function fetchProdcuctDetails(id: string): Promise<Product[]> {
+export async function fetchProdcuctDetails(id: string): Promise<Product> {
   try {
     const response = await axios.get(
       `http://localhost:5000/api/products/get/${id}`
@@ -10,7 +10,6 @@ export async function fetchProdcuctDetails(id: string): Promise<Product[]> {
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
-    return [];
+    return Promise.reject("Failed to fetch product details.");
   }
 }
-

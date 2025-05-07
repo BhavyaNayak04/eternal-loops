@@ -29,7 +29,7 @@ export default function ProductDetails() {
       setLoading(true);
       try {
         const product = await fetchProdcuctDetails(id as string);
-        setProductData(product);
+        setProductData(product); 
       } catch (err) {
         console.error("Failed to fetch product details:", err);
         setError("Failed to load product data.");
@@ -62,10 +62,9 @@ export default function ProductDetails() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-md overflow-hidden mt-20">
+    <div className="max-w-7xl mx-auto overflow-hidden mt-20">
       <div className="flex flex-col md:flex-row min-h-screen md:min-h-[600px]">
-        {/* Product Image - Left Side */}
-        <div className="md:w-1/2 bg-gray-50 flex items-center justify-center p-6">
+        <div className="md:w-1/2 flex items-center justify-center p-6">
           <div className="relative w-full h-full max-h-[500px]">
             <Image
               src={productData.image}
@@ -78,7 +77,6 @@ export default function ProductDetails() {
           </div>
         </div>
 
-        {/* Product Details - Right Side */}
         <div className="md:w-1/2 p-8 flex flex-col">
           <Link
             href="/shop"
