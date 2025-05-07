@@ -12,10 +12,13 @@ export async function signIn(
   password: string
 ): Promise<SignInResponse> {
   try {
-    const response = await axios.post("http://localhost:5000/api/auth/login", {
-      email,
-      password,
-    });
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+      {
+        email,
+        password,
+      }
+    );
 
     return {
       success: true,

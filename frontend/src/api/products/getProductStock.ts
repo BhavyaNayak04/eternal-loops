@@ -1,11 +1,13 @@
 import axios from "axios";
 interface ProductStockResponse {
-    stock: number;
+  stock: number;
 }
-export async function fetchProductStock(id: string): Promise<ProductStockResponse> {
+export async function fetchProductStock(
+  id: string
+): Promise<ProductStockResponse> {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/products/stock/${id}`
+      `${process.env.NEXT_PUBLIC_API_URL}/products/stock/${id}`
     );
     console.log("Product details response:", response.data);
     return response.data;

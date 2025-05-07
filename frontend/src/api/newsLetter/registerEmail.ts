@@ -9,7 +9,7 @@ interface RegisterResponse {
 export async function registerEmail(email: string): Promise<RegisterResponse> {
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/newsletter/register",
+      `${process.env.NEXT_PUBLIC_API_URL}/newsletter/register`,
       { email },
       {
         headers: {

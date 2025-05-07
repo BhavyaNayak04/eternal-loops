@@ -18,6 +18,8 @@ import {
 import Link from "next/link";
 import { Product } from "@/types";
 import SimilarProducts from "@/components/shop/SimilarProducts";
+import addToCart from "@/api/cart/addToCart";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
@@ -29,6 +31,8 @@ export default function ProductDetails() {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [likesCount, setLikesCount] = useState(24);
+  const [message, setMessage] = useState<string>("");
+  const { user } = useAuth();
 
   const incrementQuantity = () => {
     setQuantity((prev) => (prev < maxQuantity ? prev + 1 : prev));
@@ -60,13 +64,22 @@ export default function ProductDetails() {
     }
   }, [id]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     setIsAddingToCart(true);
-    // Simulate API call
-    setTimeout(() => {
+    if (!user) {
+      setError("Error");
       setIsAddingToCart(false);
-      // Show success toast/notification here
-    }, 800);
+      return;
+    }
+    const response = await addToCart(user.userId, id as string, quantity);
+    if (response.success) {
+      setIsAddingToCart(false);
+      setMessage("Added to cart successfully!");
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
+      setError(null);
+    }
   };
 
   const toggleWishlist = () => {
@@ -283,6 +296,7 @@ export default function ProductDetails() {
               />
             </button>
           </div>
+          <p className="flex justify-center items-center w-full mt-3 text-gray-400">{message}</p>
         </div>
       </div>
       <SimilarProducts tag={productData.tag} />

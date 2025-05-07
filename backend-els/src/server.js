@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import productRoutes from "./routes/productRoutes.js";
 import newsLetterRoutes from "./routes/newsLetterRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import likeRoutes from "./routes/likeRoutes.js";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/newsletter", newsLetterRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/likes", likeRoutes);
 
 // Connect to MongoDB
 mongoose

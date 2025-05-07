@@ -4,7 +4,7 @@ import { Product } from "@/types/index";
 export async function fetchProdcuctDetails(id: string): Promise<Product> {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/products/get/${id}`
+      `${process.env.NEXT_PUBLIC_API_URL}/products/get/${id}`
     );
     console.log("Product details response:", response.data);
     return response.data;

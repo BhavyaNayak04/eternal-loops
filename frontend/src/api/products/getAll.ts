@@ -1,9 +1,11 @@
 import axios from "axios";
-import { Products } from "@/types/index";
+import { Product } from "@/types/index";
 
-export async function getAllProducts(): Promise<Products[]> {
+export async function getAllProducts(): Promise<Product[]> {
   try {
-    const response = await axios.get("http://localhost:5000/api/products/all");
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/products/all`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
