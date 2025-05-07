@@ -1,21 +1,37 @@
 "use client";
 import { fetchProdcuctDetails } from "@/api/products/getProductDetails";
+import { fetchProductStock } from "@/api/products/getProductStock";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, Minus, Plus, ShoppingCart, Heart } from "lucide-react";
+import Loader from "@/components/Loader";
+import {
+  ChevronLeft,
+  Minus,
+  Plus,
+  ShoppingCart,
+  Heart,
+  Info,
+  Truck,
+  Clock,
+} from "lucide-react";
 import Link from "next/link";
 import { Product } from "@/types";
+import SimilarProducts from "@/components/shop/SimilarProducts";
 
 export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
+  const [maxQuantity, setMaxQuantity] = useState(10);
   const { id } = useParams();
   const [productData, setProductData] = useState<Product>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [likesCount, setLikesCount] = useState(24);
 
   const incrementQuantity = () => {
-    setQuantity((prev) => prev + 1);
+    setQuantity((prev) => (prev < maxQuantity ? prev + 1 : prev));
   };
 
   const decrementQuantity = () => {
@@ -29,7 +45,9 @@ export default function ProductDetails() {
       setLoading(true);
       try {
         const product = await fetchProdcuctDetails(id as string);
-        setProductData(product); 
+        setProductData(product);
+        const stockData = await fetchProductStock(id as string);
+        setMaxQuantity(stockData.stock || 10);
       } catch (err) {
         console.error("Failed to fetch product details:", err);
         setError("Failed to load product data.");
@@ -37,138 +55,237 @@ export default function ProductDetails() {
         setLoading(false);
       }
     }
-
     if (id) {
       fetchData();
     }
   }, [id]);
 
+  const handleAddToCart = () => {
+    setIsAddingToCart(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsAddingToCart(false);
+      // Show success toast/notification here
+    }, 800);
+  };
+
+  const toggleWishlist = () => {
+    setIsWishlisted(!isWishlisted);
+    setLikesCount((prev) => (isWishlisted ? prev - 1 : prev + 1));
+  };
+
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-gray-500 text-lg">Loading product details...</p>
-      </div>
-    );
+    return <Loader />;
   }
 
   if (error || !productData) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-red-500 text-lg">
-          {error || "Product not found."}
-        </p>
+      <div className="flex items-center justify-center h-screen bg-gray-50">
+        <div className="bg-white p-6 rounded-lg shadow-md max-w-md w-full">
+          <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-red-100">
+            <Info className="text-red-500" size={20} />
+          </div>
+          <h3 className="text-lg font-semibold text-center text-gray-800 mb-2">
+            Product Not Found
+          </h3>
+          <p className="text-gray-600 text-center mb-4">
+            {error || "We couldn't find the product you're looking for."}
+          </p>
+          <Link href="/shop">
+            <div className="w-full py-2 bg-gray-600 text-white font-medium rounded-md hover:bg-gray-700 transition-all text-center">
+              Continue Shopping
+            </div>
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto overflow-hidden mt-20">
-      <div className="flex flex-col md:flex-row min-h-screen md:min-h-[600px]">
-        <div className="md:w-1/2 flex items-center justify-center p-6">
-          <div className="relative w-full h-full max-h-[500px]">
-            <Image
-              src={productData.image}
-              alt={productData.name}
-              layout="fill"
-              objectFit="contain"
-              priority
-              className="rounded-md"
-            />
+    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 mt-16">
+      <div className="mb-4">
+        <Link
+          href="/shop"
+          className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-800 transition-colors"
+        >
+          <ChevronLeft size={16} className="mr-1" />
+          Back to Shop
+        </Link>
+      </div>
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="lg:w-2/5">
+          <div className="bg-gray-50 rounded-lg p-4 overflow-hidden">
+            <div className="relative aspect-square w-full">
+              <Image
+                src={productData.image}
+                alt={productData.name}
+                fill
+                sizes="(max-width: 768px) 100vw, 40vw"
+                priority
+                className="object-contain"
+              />
+            </div>
           </div>
         </div>
 
-        <div className="md:w-1/2 p-8 flex flex-col">
-          <Link
-            href="/shop"
-            className="flex items-center text-gray-500 hover:text-blue-600 mb-6 text-sm"
-          >
-            <ChevronLeft size={16} className="mr-1" />
-            Back to Products
-          </Link>
-
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            {productData.name}
-          </h1>
-
-          <div className="text-2xl font-bold text-green-700 mb-4">
-            ${productData.price}
+        <div className="lg:w-3/5 flex flex-col">
+          <div className="mb-4">
+            <span className="inline-block bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs font-semibold tracking-wide uppercase mb-2">
+              {productData.tag}
+            </span>
+            <h1 className="text-2xl font-bold text-gray-900 leading-tight">
+              {productData.name}
+            </h1>
           </div>
 
-          {productData.inStock ? (
-            <span className="inline-block bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-md mb-6">
-              In Stock
-            </span>
-          ) : (
-            <span className="inline-block bg-red-100 text-red-800 text-sm font-medium px-3 py-1 rounded-md mb-6">
-              Out of Stock
-            </span>
-          )}
-
-          <p className="text-gray-600 mb-8 leading-relaxed">
-            {productData.description}
-          </p>
-
-          <div className="space-y-2 mb-8">
-            <div className="flex">
-              <span className="text-gray-600 font-medium w-24">Category:</span>
-              <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-sm">
-                {productData.tag}
-              </span>
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-2xl font-bold text-gray-900">
+              Rs.{productData.price}
             </div>
-            <div className="flex">
-              <span className="text-gray-600 font-medium w-24">
-                Product ID:
+            <div className="flex items-center">
+              <div className="flex">
+                <Heart size={16} color="red" />
+              </div>
+              <span className="ml-2 text-xs text-gray-500">
+                liked by {likesCount}
               </span>
-              <span className="text-gray-500 text-sm">{productData._id}</span>
             </div>
           </div>
 
-          {/* Quantity Selector */}
-          <div className="mb-8">
+          <div className="mb-4">
+            {productData.inStock ? (
+              <div className="flex items-center text-green-600">
+                <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
+                <span className="font-medium text-sm">In Stock</span>
+                <span className="ml-2 text-xs text-gray-500">
+                  {maxQuantity > 10
+                    ? "Plenty available"
+                    : `Only ${maxQuantity} left`}
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center text-red-600">
+                <div className="w-2 h-2 rounded-full bg-red-500 mr-2"></div>
+                <span className="font-medium text-sm">Out of Stock</span>
+              </div>
+            )}
+          </div>
+          <div className="border-t border-gray-200 my-4"></div>
+          <div className="mb-4">
+            <h3 className="text-base font-semibold text-gray-900 mb-2">
+              Description
+            </h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              {productData.description}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-4 mb-4">
+            <div className="bg-blue-50 rounded-lg p-3 flex-1">
+              <div className="flex items-center">
+                <Truck size={14} className="text-blue-700 mr-2" />
+                <span className="font-medium text-sm text-gray-800">
+                  Free shipping
+                </span>
+              </div>
+              <div className="flex items-center mt-1">
+                <Clock size={14} className="text-blue-700 mr-2" />
+                <span className="text-xs text-gray-600">
+                  Delivery: 2-5 days
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-3 flex-1">
+              <div className="text-xs text-gray-500">
+                Product ID: <span className="font-mono">{productData._id}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-4">
             <label
               htmlFor="quantity"
-              className="block text-gray-700 font-medium mb-2"
+              className="block text-xs text-gray-700 font-medium mb-1"
             >
               Quantity:
             </label>
-            <div className="flex items-center w-32">
+            <div className="flex items-center">
               <button
-                className="w-10 h-10 bg-gray-100 border border-gray-300 flex items-center justify-center rounded-l-md hover:bg-gray-200"
+                className="w-8 h-8 bg-gray-100 border border-gray-300 flex items-center justify-center rounded-l-md hover:bg-gray-200 transition-colors"
                 onClick={decrementQuantity}
+                disabled={quantity <= 1}
               >
-                <Minus size={16} />
+                <Minus
+                  size={14}
+                  className={quantity <= 1 ? "text-gray-400" : "text-gray-700"}
+                />
               </button>
               <input
                 type="text"
                 id="quantity"
-                className="w-12 h-10 border-t border-b border-gray-300 text-center"
+                className="w-10 h-8 border-t border-b border-gray-300 text-center text-sm font-medium"
                 value={quantity}
                 readOnly
               />
               <button
-                className="w-10 h-10 bg-gray-100 border border-gray-300 flex items-center justify-center rounded-r-md hover:bg-gray-200"
+                className="w-8 h-8 bg-gray-100 border border-gray-300 flex items-center justify-center rounded-r-md hover:bg-gray-200 transition-colors"
                 onClick={incrementQuantity}
+                disabled={quantity >= maxQuantity}
               >
-                <Plus size={16} />
+                <Plus
+                  size={14}
+                  className={
+                    quantity >= maxQuantity ? "text-gray-400" : "text-gray-700"
+                  }
+                />
               </button>
+
+              <span className="ml-2 text-xs text-gray-500">
+                {maxQuantity > 0 ? `Max: ${maxQuantity}` : "Out of stock"}
+              </span>
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex space-x-4 mt-auto">
+          <div className="flex space-x-3 mt-2">
             <button
-              className="flex-grow py-3 px-6 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center"
-              disabled={!productData.inStock}
+              className={`flex-grow py-3 px-4 rounded-md font-semibold text-white transition-all flex items-center justify-center ${
+                productData.inStock
+                  ? "bg-blue-600 hover:bg-blue-700"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
+              disabled={!productData.inStock || isAddingToCart}
+              onClick={handleAddToCart}
             >
-              <ShoppingCart size={18} className="mr-2" />
-              Add to Cart
+              {isAddingToCart ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  Adding...
+                </>
+              ) : (
+                <>
+                  <ShoppingCart size={18} className="mr-2" />
+                  Add to Cart
+                </>
+              )}
             </button>
-            <button className="py-3 px-4 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
-              <Heart size={18} />
+            <button
+              className={`py-3 px-3 border rounded-md transition-all ${
+                isWishlisted
+                  ? "bg-red-50 border-red-200 text-red-600"
+                  : "border-gray-300 text-gray-700 hover:bg-gray-50"
+              }`}
+              onClick={toggleWishlist}
+            >
+              <Heart
+                size={18}
+                className={isWishlisted ? "fill-red-500 text-red-500" : ""}
+              />
             </button>
           </div>
         </div>
       </div>
+      <SimilarProducts tag={productData.tag} />
     </div>
   );
 }

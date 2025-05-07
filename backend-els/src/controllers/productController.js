@@ -102,3 +102,20 @@ export const deleteProduct = async (req, res) => {
       .json({ message: "Failed to delete product", error: error.message });
   }
 };
+
+export const getProductStock = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    const stock = product.quantity;
+    res.status(200).json({ stock });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Failed to fetch product", error: error.message });
+  }
+};

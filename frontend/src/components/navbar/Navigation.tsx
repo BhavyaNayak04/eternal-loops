@@ -15,16 +15,12 @@ import {
   TabPanel,
   TabPanels,
 } from "@headlessui/react";
-import {
-  Bars3Icon,
-  ShoppingBagIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { navigation } from "@/types/index";
-
+import Cart from "./Cart";
 
 export default function Example() {
   const [open, setOpen] = useState(false);
@@ -173,9 +169,6 @@ export default function Example() {
       </Dialog>
 
       <header className="fixed top-0 z-10 w-full bg-white">
-        {/* <p className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
-          Eternal Loops. Hand made with ❤️
-        </p> */}
         <nav
           aria-label="Top"
           className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
@@ -309,8 +302,8 @@ export default function Example() {
               <div className="ml-auto flex items-center">
                 {user ? (
                   <div className="flex items-center space-x-4">
-                    <Link href={'/shop'}>Shop</Link>
-                    <Link href={'/profile'}>Profile</Link>
+                    <Link href={"/shop"}>Shop</Link>
+                    <Link href={"/profile"}>Profile</Link>
                   </div>
                 ) : (
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
@@ -329,20 +322,7 @@ export default function Example() {
                     </Link>
                   </div>
                 )}
-
-                {/* Cart */}
-                <div className="ml-4 flow-root lg:ml-6">
-                  <a href="#" className="group -m-2 flex items-center p-2">
-                    <ShoppingBagIcon
-                      aria-hidden="true"
-                      className="size-6 shrink-0 text-gray-400 group-hover:text-gray-500"
-                    />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                      0
-                    </span>
-                    <span className="sr-only">items in cart, view bag</span>
-                  </a>
-                </div>
+                <Cart />
               </div>
             </div>
           </div>

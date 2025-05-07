@@ -1,4 +1,3 @@
-import e from "express";
 import NewsLetter from "../models/NewsLetter.js";
 
 export const register = async (req, res) => {

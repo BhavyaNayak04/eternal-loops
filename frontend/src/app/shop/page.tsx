@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Footer from "@/components/home/Footer";
 import { Products } from "@/types/index";
 import { getAllProducts } from "@/api/products/getAll";
-import Product from "@/components/shop/Product";
+import Product from "@/components/shop/Products";
 import { categories, priceRanges } from "@/types/index";
 
 export default function Shop() {
