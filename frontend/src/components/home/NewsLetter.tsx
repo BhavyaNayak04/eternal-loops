@@ -1,4 +1,26 @@
+"use client";
+import { registerEmail } from "@/api/newsLetter/registerEmail";
+import { FormEvent, useState } from "react";
+
 export default function NewsLetter() {
+  const [message, setMessage] = useState<string>("");
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+
+    if (email) {
+      try {
+        const response = await registerEmail(email);
+        setMessage(response.message);
+      } catch (error) {
+        console.error("Failed to subscribe:", error);
+      }
+    } else {
+      console.warn("Email input is empty");
+    }
+  };
+
   return (
     <section className="py-16 px-8 bg-rose-100">
       <div className="max-w-4xl mx-auto text-center">
@@ -10,22 +32,33 @@ export default function NewsLetter() {
           and crochet inspiration
         </p>
 
-        <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+        <form
+          className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto"
+          onSubmit={handleSubmit}
+        >
           <input
             type="email"
+            name="email"
             placeholder="Your email address"
             className="flex-grow px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-rose-500"
             required
           />
-          <button className="px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors whitespace-nowrap">
+          <button
+            type="submit"
+            className="px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors whitespace-nowrap"
+          >
             Subscribe Now
           </button>
         </form>
 
-        <p className="mt-4 text-sm text-gray-600">
-          By subscribing, you agree to receive email marketing. You can
-          unsubscribe at any time.
-        </p>
+        {message ? (
+          <p className="mt-4 text-gray-600">{message}</p>
+        ) : (
+          <p className="mt-4 text-sm text-gray-600">
+            By subscribing, you agree to receive email marketing. You can
+            unsubscribe at any time.
+          </p>
+        )}
       </div>
     </section>
   );

@@ -3,10 +3,10 @@ export interface Product {
   name: string;
   description: string;
   image: string;
-  tag?: string;
+  tag: string;
   price: number;
-  inStock?: boolean;
-  quantity?: number;
+  inStock: boolean;
+  quantity: number;
 }
 
 export const categories = [
