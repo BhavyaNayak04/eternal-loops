@@ -33,22 +33,7 @@ export default function ProfilePage() {
   }
 
   if (!user) {
-    return (
-      <div className="min-h-screen bg-rose-50 flex flex-col items-center justify-center p-4">
-        <h1 className="text-2xl font-bold text-rose-800 mb-4">
-          Please Sign In
-        </h1>
-        <p className="text-gray-600 mb-6">
-          You need to be signed in to view your profile
-        </p>
-        <Link
-          href="/signin"
-          className="px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors"
-        >
-          Sign In
-        </Link>
-      </div>
-    );
+    return;
   }
 
   const tabs = [

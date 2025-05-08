@@ -21,18 +21,17 @@ export const getUserDetails = async (req, res) => {
 // Edit user profile
 export const editUserProfile = async (req, res) => {
   const { userId } = req.params;
-  const { name, email, contactNumber, address } = req.body;
+  const { contactNumber, address } = req.body;
 
   const updateFields = {};
-  if (name) updateFields.name = name;
-  if (email) updateFields.email = email;
+
   if (contactNumber) updateFields.contactNumber = contactNumber;
   if (address) updateFields.address = address;
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { name, email, contactNumber, address },
+      { contactNumber, address },
       { new: true, runValidators: true }
     ).select("-password");
 

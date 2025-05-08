@@ -1,17 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import { toast } from "react-hot-toast";
-
-type UserType = {
-  userId: string;
-  token: string;
-};
+import { useEffect, useState } from "react";
+import { UserType } from "@/types";
+import { getUser } from "@/api/user/getUser";
+import { getProfile } from "@/api/user/updateUser";
 
 export default function ProfileDetails({ user }: { user: UserType }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    contactNumber: "",
+    address: "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getUser(user.userId);
+        if (response) {
+          setFormData({
+            name: response.name,
+            email: response.email,
+            contactNumber: response.contactNumber,
+            address: response.address,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+    fetchProfile();
+  }, [user.userId]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -28,23 +49,24 @@ export default function ProfileDetails({ user }: { user: UserType }) {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/user/profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await getProfile(
+        user.userId,
+        formData.contactNumber,
+        formData.address
+      );
 
-      if (!response.ok) {
-        throw new Error("Failed to update profile");
+      if (!response) {
+        return;
       }
+      setFormData((prev) => ({
+        ...prev,
+        contactNumber: response.contactNumber,
+        address: response.address,
+      }));
 
-      toast.success("Profile updated successfully!");
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating profile:", error);
-      toast.error("Failed to update profile. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -75,7 +97,7 @@ export default function ProfileDetails({ user }: { user: UserType }) {
               </label>
               <input
                 type="text"
-                value={user.name}
+                value={formData.name}
                 disabled
                 className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-700"
               />
@@ -86,7 +108,7 @@ export default function ProfileDetails({ user }: { user: UserType }) {
               </label>
               <input
                 type="email"
-                value={user.email}
+                value={formData.email}
                 disabled
                 className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-700"
               />
@@ -140,24 +162,26 @@ export default function ProfileDetails({ user }: { user: UserType }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h3 className="text-sm font-medium text-gray-500">Name</h3>
-              <p className="mt-1 text-lg text-gray-800">{user.name}</p>
+              <p className="mt-1 text-lg text-gray-800">{formData.name}</p>
             </div>
             <div>
               <h3 className="text-sm font-medium text-gray-500">Email</h3>
-              <p className="mt-1 text-lg text-gray-800">{user.email}</p>
+              <p className="mt-1 text-lg text-gray-800">{formData.email}</p>
             </div>
             <div>
               <h3 className="text-sm font-medium text-gray-500">
                 Contact Number
               </h3>
-              <p className="mt-1 text-lg text-gray-800">{user.contactNumber}</p>
+              <p className="mt-1 text-lg text-gray-800">
+                {formData.contactNumber}
+              </p>
             </div>
           </div>
 
           <div>
             <h3 className="text-sm font-medium text-gray-500">Address</h3>
             <p className="mt-1 text-lg text-gray-800">
-              {user.address || "No address provided"}
+              {formData.address || "No address provided"}
             </p>
           </div>
         </div>

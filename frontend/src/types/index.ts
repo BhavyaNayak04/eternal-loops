@@ -281,3 +281,16 @@ export const faqCategories = [
     ],
   },
 ];
+
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  address: string;
+  contactNumber: string;
+}
+
+export type UserType = {
+  userId: string;
+  token: string;
+};
