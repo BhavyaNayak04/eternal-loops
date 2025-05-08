@@ -14,7 +14,7 @@ export default function Shop() {
   const [inStockOnly, setInStockOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
-  const [sortBy, setSortBy] = useState("price-asc");
+  const [sortBy, setSortBy] = useState("name");
   const { user } = useAuth();
 
   useEffect(() => {
@@ -98,7 +98,7 @@ export default function Shop() {
     setSelectedPriceRange(null);
     setInStockOnly(false);
     setSearchQuery("");
-    setSortBy("featured");
+    setSortBy("name");
   };
 
   return (
@@ -119,9 +119,9 @@ export default function Shop() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Filters Sidebar */}
-          <div className="w-full lg:w-72 flex-shrink-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Filters Sidebar - Always on left */}
+          <div className="lg:col-span-3">
             <div className="bg-white p-6 rounded-lg shadow-md sticky top-4">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-medium text-gray-900">Filters</h2>
@@ -227,8 +227,8 @@ export default function Shop() {
             </div>
           </div>
 
-          {/* Products Grid */}
-          <div className="flex-1 basis-3/4">
+          {/* Products Grid - Always on right */}
+          <div className="lg:col-span-9">
             {/* Sort and Results Count */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-3 border-b border-gray-200">
               <p className="text-sm text-gray-500">
@@ -245,7 +245,6 @@ export default function Shop() {
                   onChange={(e) => setSortBy(e.target.value)}
                   className="text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 py-1 px-2"
                 >
-                  <option value="featured">Featured</option>
                   <option value="price-asc">Price: Low to High</option>
                   <option value="price-desc">Price: High to Low</option>
                   <option value="name">Name</option>

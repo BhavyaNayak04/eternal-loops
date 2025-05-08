@@ -52,9 +52,6 @@ export default function FeaturedProducts() {
                   <h3 className="text-xl font-semibold text-gray-800">
                     {featuredProduct.product.name}
                   </h3>
-                  <span className="text-rose-600 font-bold">
-                    {featuredProduct.product.price}
-                  </span>
                 </div>
                 <p className="text-gray-600 mb-4">
                   {featuredProduct.product.description}
@@ -66,9 +63,6 @@ export default function FeaturedProducts() {
                   </span>{" "}
                   {featuredProduct.likeCount > 1 ? `people` : "person"}
                 </p>
-                <button className="w-full py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors">
-                  Add to Cart
-                </button>
               </div>
             </div>
           ))}

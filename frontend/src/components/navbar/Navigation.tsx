@@ -144,8 +144,8 @@ export default function Example() {
 
             {user ? (
               <div className="flex items-center space-x-4">
-                <div>Profile</div>
-                <div>Shop</div>
+                <Link href={"/shop"}>Shop</Link>
+                <Link href={"/profile"}>Profile</Link>
               </div>
             ) : (
               <div className="space-y-6 px-4">
@@ -206,7 +206,13 @@ export default function Example() {
                       {({ open }) => (
                         <>
                           <div className="relative flex">
-                            <PopoverButton className={`relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium text-gray-700 transition-colors duration-200 ease-out hover:text-gray-800 ${open ? 'border-indigo-600 text-indigo-600' : 'border-transparent'}`}>
+                            <PopoverButton
+                              className={`relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium text-gray-700 transition-colors duration-200 ease-out hover:text-gray-800 ${
+                                open
+                                  ? "border-indigo-600 text-indigo-600"
+                                  : "border-transparent"
+                              }`}
+                            >
                               {category.name}
                             </PopoverButton>
                           </div>
@@ -268,7 +274,10 @@ export default function Example() {
                                           className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
                                         >
                                           {section.items.map((item) => (
-                                            <li key={item.name} className="flex">
+                                            <li
+                                              key={item.name}
+                                              className="flex"
+                                            >
                                               <a
                                                 href={item.href}
                                                 className="hover:text-gray-800"

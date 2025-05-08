@@ -63,7 +63,6 @@ export default function ProfilePage() {
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-rose-800 mb-8">My Account</h1>
 
-        {/* Profile Navigation Tabs */}
         <div className="mb-8 border-b border-rose-200">
           <div className="flex flex-wrap -mb-px">
             {tabs.map((tab) => (
@@ -82,7 +81,6 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Profile Content */}
         <div className="bg-white rounded-lg shadow p-6 md:p-8">
           {activeTab === "profile" && <ProfileDetails user={user} />}
           {activeTab === "liked" && <LikedProducts />}
@@ -90,7 +88,6 @@ export default function ProfilePage() {
           {activeTab === "orders" && <PastOrders />}
         </div>
 
-        {/* Cart Button - Fixed at bottom */}
         <div className="fixed bottom-8 right-8">
           <Link
             href="/cart"

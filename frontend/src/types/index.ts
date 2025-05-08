@@ -157,49 +157,127 @@ export const navigation = {
   ],
 };
 
-
 export const featuredProducts = [
-    {
-      _id: 1,
-      name: "Cozy Blanket",
-      price: "$89.99",
-      image: "/blanket.webp",
-      description:
-        "Hand-crocheted with premium merino wool for ultimate comfort.",
-    },
-    {
-      _id: 2,
-      name: "Baby Booties",
-      price: "$24.99",
-      image: "/booties.webp",
-      description: "Adorable soft booties perfect for newborns and infants.",
-    },
-    {
-      _id: 3,
-      name: "Amigurumi Bunny",
-      price: "$32.99",
-      image: "/bunny.webp",
-      description: "Charming handmade stuffed bunny, perfect as a gift.",
-    },
-  ];
+  {
+    _id: 1,
+    name: "Cozy Blanket",
+    price: "$89.99",
+    image: "/blanket.webp",
+    description:
+      "Hand-crocheted with premium merino wool for ultimate comfort.",
+  },
+  {
+    _id: 2,
+    name: "Baby Booties",
+    price: "$24.99",
+    image: "/booties.webp",
+    description: "Adorable soft booties perfect for newborns and infants.",
+  },
+  {
+    _id: 3,
+    name: "Amigurumi Bunny",
+    price: "$32.99",
+    image: "/bunny.webp",
+    description: "Charming handmade stuffed bunny, perfect as a gift.",
+  },
+];
 
-  export const testimonials = [
-    {
-      id: 1,
-      name: "Sarah L.",
-      text: "The blanket I ordered is absolutely stunning. The attention to detail is remarkable!",
-      rating: 5,
-    },
-    {
-      id: 2,
-      name: "Michael T.",
-      text: "I bought a crochet toy for my daughter and she hasn't put it down since. Beautiful craftsmanship!",
-      rating: 5,
-    },
-    {
-      id: 3,
-      name: "Emma R.",
-      text: "The custom scarf exceeded my expectations. So warm and the colors are gorgeous!",
-      rating: 5,
-    },
-  ];
+export const testimonials = [
+  {
+    id: 1,
+    name: "Sarah L.",
+    text: "The blanket I ordered is absolutely stunning. The attention to detail is remarkable!",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "Michael T.",
+    text: "I bought a crochet toy for my daughter and she hasn't put it down since. Beautiful craftsmanship!",
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: "Emma R.",
+    text: "The custom scarf exceeded my expectations. So warm and the colors are gorgeous!",
+    rating: 5,
+  },
+];
+
+export const faqCategories = [
+  {
+    id: "ordering",
+    name: "Ordering & Shipping",
+    items: [
+      {
+        question: "How long does shipping take?",
+        answer:
+          "Domestic orders typically ship within 3-5 business days. International shipping can take 10-20 business days depending on the destination country and customs processing.",
+      },
+      {
+        question: "Do you ship internationally?",
+        answer:
+          "No, we currently only ship within Karnataka. We hope to expand our shipping options in the future.",
+      },
+      {
+        question: "Can I change or cancel my order?",
+        answer: "No, once an order is placed, we cannot change or cancel it.",
+      },
+      {
+        question: "How do I track my order?",
+        answer: "Once your order ships, you'll receive a confirmation email.",
+      },
+      {
+        question: "What payment methods do you accept?",
+        answer: "We accept all major credit cards.",
+      },
+    ],
+  },
+  {
+    id: "products",
+    name: "Products & Materials",
+    items: [
+      {
+        question: "What materials do you use in your crochet items?",
+        answer:
+          "We primarily use premium acrylic, cotton, and wool-blend yarns that are both soft and durable. Each product listing specifies the exact materials used so you know exactly what you're getting.",
+      },
+      {
+        question: "Are your products machine washable?",
+        answer:
+          "Most of our items are machine washable on a gentle cycle with cold water, but we recommend laying flat to dry. Each product comes with specific care instructions tailored to its materials.",
+      },
+      {
+        question: "Do you use any animal-derived materials?",
+        answer:
+          "We do use some wool and alpaca fibers in select products, which are clearly labeled. We also offer many vegan-friendly options made from plant-based and synthetic fibers.",
+      },
+      {
+        question: "Can I request a custom color for an item?",
+        answer:
+          "Absolutely! We love creating custom color combinations. Please note that custom orders may take 1-2 weeks longer than standard items.",
+      },
+    ],
+  },
+  {
+    id: "customorders",
+    name: "Custom Orders",
+    items: [
+      {
+        question: "Can I request a custom design?",
+        answer:
+          "Yes! We love bringing your ideas to life. Please use our contact form to share your custom design request, and we'll get back to you within 48 hours with a quote and timeline.",
+      },
+      {
+        question: "How much do custom orders cost?",
+        answer:
+          "Custom order pricing depends on complexity, size, materials, and time required. We provide a detailed quote before beginning any work, with no obligation to proceed.",
+      },
+
+      {
+        question: "Can I provide my own pattern for a custom order?",
+        answer:
+          "Yes, we can work from your pattern if you have the rights to use it. We can also modify existing patterns or create something entirely new based on your vision.",
+      },
+    ],
+  },
+];
