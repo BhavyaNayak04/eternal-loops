@@ -7,6 +7,7 @@ export interface Product {
   price: number;
   inStock: boolean;
   quantity: number;
+  isLiked?: boolean;
 }
 
 export const categories = [

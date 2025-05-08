@@ -1,3 +1,4 @@
+import Like from "../models/Like.js";
 import Product from "../models/Product.js";
 
 // Add a new product
@@ -39,14 +40,22 @@ export const getAllProducts = async (_, res) => {
 
 // Get a single product by ID
 export const getProductById = async (req, res) => {
-  const { id } = req.params;
+  const { productId, userId } = req.params;
 
   try {
-    const product = await Product.findById(id);
+    const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    res.status(200).json(product);
+
+    const isLiked = await Like.exists({ userId, productId });
+
+    const productWithIsLiked = {
+      ...product.toObject(),
+      isLiked: !!isLiked,
+    };
+
+    res.status(200).json(productWithIsLiked);
   } catch (error) {
     console.error(error);
     res
