@@ -20,6 +20,7 @@ import { Product } from "@/types";
 import SimilarProducts from "@/components/shop/SimilarProducts";
 import addToCart from "@/api/cart/addToCart";
 import { useAuth } from "@/context/AuthContext";
+import { toggleLike } from "@/api/likes/toggleLike";
 
 export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
@@ -30,7 +31,7 @@ export default function ProductDetails() {
   const [error, setError] = useState<string | null>(null);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [likesCount, setLikesCount] = useState(24);
+  const [likesCount, setLikesCount] = useState(0);
   const [message, setMessage] = useState<string>("");
   const { user } = useAuth();
 
@@ -63,7 +64,7 @@ export default function ProductDetails() {
       fetchData();
     }
   }, [id]);
-
+  if (!user || !id) return;
   const handleAddToCart = async () => {
     setIsAddingToCart(true);
     if (!user) {
@@ -82,9 +83,22 @@ export default function ProductDetails() {
     }
   };
 
-  const toggleWishlist = () => {
+  const toggleWishlist = async () => {
     setIsWishlisted(!isWishlisted);
     setLikesCount((prev) => (isWishlisted ? prev - 1 : prev + 1));
+    const response = await toggleLike(
+      user.userId,
+      id as string,
+      isWishlisted ? "unlike" : "like"
+    );
+    if (response.success) {
+      setMessage(response.message);
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
+    } else {
+      setError("Failed to update like.");
+    }
   };
 
   if (loading) {
@@ -296,7 +310,9 @@ export default function ProductDetails() {
               />
             </button>
           </div>
-          <p className="flex justify-center items-center w-full mt-3 text-gray-400">{message}</p>
+          <p className="flex justify-center items-center w-full mt-3 text-gray-400">
+            {message}
+          </p>
         </div>
       </div>
       <SimilarProducts tag={productData.tag} />

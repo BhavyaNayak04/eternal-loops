@@ -1,10 +1,15 @@
 import axios from "axios";
 
+interface ToggleLikeResponse {
+  message: string;
+  success: boolean;
+}
+
 export const toggleLike = async (
   userId: string,
   productId: string,
   action: string
-): Promise<string> => {
+): Promise<ToggleLikeResponse> => {
   try {
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/likes/toggleLike`,
@@ -19,9 +24,15 @@ export const toggleLike = async (
         },
       }
     );
-    return response.data.message;
+    return {
+      message: response.data.message,
+      success: true,
+    };
   } catch (error) {
     console.error("Error fetching cart count:", error);
-    return "Error fetching cart count";
+    return {
+      message: "Error toggling like",
+      success: false,
+    };
   }
 };

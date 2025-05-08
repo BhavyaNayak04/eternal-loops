@@ -27,10 +27,19 @@ export async function signIn(
       userId: response.data.userId,
     };
   } catch (e: unknown) {
-    console.log(e);
+    if (axios.isAxiosError(e) && e.response) {
+      if (e.response.status === 401) {
+        return {
+          success: false,
+          message: e.response.data.message || "Unauthorized",
+          userId: "",
+          token: undefined,
+        };
+      }
+    }
     return {
       success: false,
-      message: "An error occurred during login",
+      message: e instanceof Error ? e.message : "Unknown error",
       userId: "",
       token: undefined,
     };
