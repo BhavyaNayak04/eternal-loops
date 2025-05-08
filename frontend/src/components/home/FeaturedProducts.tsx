@@ -1,12 +1,26 @@
-import { Product } from "@/types";
-import Link from "next/link";
+"use client";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { getTopThreeLiked } from "@/api/likes/getTopThreeLiked";
+import Link from "next/link";
+import { TopLikedProduct } from "@/api/likes/getTopThreeLiked";
 
-export default function FeaturedProducts({
-  featuredProducts,
-}: {
-  featuredProducts: Product[];
-}) {
+export default function FeaturedProducts() {
+  const [featuredProducts, setFeaturedProducts] = useState<TopLikedProduct[]>(
+    []
+  );
+  useEffect(() => {
+    const fetchTopThreeLiked = async () => {
+      try {
+        const response = await getTopThreeLiked();
+        setFeaturedProducts(response);
+      } catch (error) {
+        console.error("Error fetching top three liked products:", error);
+      }
+    };
+    fetchTopThreeLiked();
+  }, []);
+
   return (
     <section className="py-16 px-8 bg-rose-50">
       <div className="max-w-6xl mx-auto">
@@ -19,15 +33,15 @@ export default function FeaturedProducts({
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {featuredProducts.map((product) => (
+          {featuredProducts.map((featuredProduct) => (
             <div
-              key={product._id}
+              key={featuredProduct.product._id}
               className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow"
             >
               <div className="relative h-64 w-full">
                 <Image
-                  src={product.image}
-                  alt={product.name}
+                  src={featuredProduct.product.image}
+                  alt={featuredProduct.product.name}
                   layout="fill"
                   objectFit="cover"
                   className="transition-transform hover:scale-105"
@@ -36,13 +50,22 @@ export default function FeaturedProducts({
               <div className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-semibold text-gray-800">
-                    {product.name}
+                    {featuredProduct.product.name}
                   </h3>
                   <span className="text-rose-600 font-bold">
-                    {product.price}
+                    {featuredProduct.product.price}
                   </span>
                 </div>
-                <p className="text-gray-600 mb-4">{product.description}</p>
+                <p className="text-gray-600 mb-4">
+                  {featuredProduct.product.description}
+                </p>
+                <p className="text-gray-600 mb-4">
+                  liked by{" "}
+                  <span className="text-rose-500">
+                    {featuredProduct.likeCount}
+                  </span>{" "}
+                  {featuredProduct.likeCount > 1 ? `people` : "person"}
+                </p>
                 <button className="w-full py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors">
                   Add to Cart
                 </button>

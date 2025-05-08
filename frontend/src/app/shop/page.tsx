@@ -2,26 +2,29 @@
 
 import { useEffect, useState } from "react";
 import Footer from "@/components/home/Footer";
-import { Products } from "@/types/index";
+import { Product } from "@/types/index";
 import { getAllProducts } from "@/api/products/getAll";
-import Product from "@/components/shop/Products";
 import { categories, priceRanges } from "@/types/index";
+import Products from "@/components/shop/Products";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Shop() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedPriceRange, setSelectedPriceRange] = useState(null);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [products, setProducts] = useState<Products[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [sortBy, setSortBy] = useState("price-asc");
+  const { user } = useAuth();
 
   useEffect(() => {
+    if (!user) return;
     const fetchProducts = async () => {
-      const products = await getAllProducts();
+      const products = await getAllProducts(user.userId);
       setProducts(products);
     };
     fetchProducts();
-  }, []);
+  }, [user]);
 
   // Handle category filter changes
   const handleCategoryChange = (categoryId) => {
@@ -76,7 +79,7 @@ export default function Shop() {
   });
 
   // Sort filtered products
-  const sortedProducts: Products[] = [...filteredProducts].sort((a, b) => {
+  const sortedProducts: Product[] = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
       case "price-asc":
         return a.price - b.price;
@@ -251,7 +254,7 @@ export default function Shop() {
             </div>
 
             {/* Products */}
-            <Product sortedProducts={sortedProducts} />
+            <Products sortedProducts={sortedProducts} user={user} />
           </div>
         </div>
       </div>

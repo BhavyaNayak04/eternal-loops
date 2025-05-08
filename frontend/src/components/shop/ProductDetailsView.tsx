@@ -21,15 +21,17 @@ export default function ProductDetailsView({
   maxQuantity,
   productId,
   userId,
+  like
 }: {
   productData: Product;
   maxQuantity: number;
   productId: string;
   userId: string;
+  like: boolean | undefined;
 }) {
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(like);
   const [likesCount, setLikesCount] = useState(0);
   const [message, setMessage] = useState<string>("");
 

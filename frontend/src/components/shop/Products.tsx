@@ -1,13 +1,27 @@
 // Product.tsx
+import addToCart from "@/api/cart/addToCart";
 import { Product } from "@/types/index";
+import { Eye, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
-export default function ProductDetails({
+export default function Products({
   sortedProducts,
+  user,
 }: {
   sortedProducts: Product[];
+  user: { userId: string; token: string } | null;
 }) {
+  const [message, setMessage] = useState("");
+  const handleCart = async (id: string) => {
+    if (!user) return;
+    const response = await addToCart(user.userId, id, 1);
+    setMessage(response.message);
+    setTimeout(() => {
+      setMessage("");
+    }, 1000);
+  };
   if (sortedProducts.length === 0) {
     return (
       <div className="flex justify-center items-center h-full">
@@ -17,6 +31,11 @@ export default function ProductDetails({
   }
   return (
     <>
+      {message && (
+        <p className="fixed top-20 right-2 z-50 bg-white px-4 py-2 rounded shadow-md text-gray-800">
+          {message}
+        </p>
+      )}
       {sortedProducts.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sortedProducts.map((product) => (
@@ -33,11 +52,18 @@ export default function ProductDetails({
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="transition-transform hover:scale-105 object-cover"
                 />
-                {!product.inStock && (
-                  <div className="absolute top-3 right-3 bg-gray-800 text-white px-3 py-1 rounded-md text-xs font-medium">
-                    Out of Stock
-                  </div>
-                )}
+                <div className="absolute top-3 right-3 flex flex-col gap-2">
+                  {!product.inStock && (
+                    <div className="bg-gray-800 text-white px-3 py-1 rounded-md text-xs font-medium">
+                      Out of Stock
+                    </div>
+                  )}
+                  {product.isLiked && (
+                    <div className="bg-white p-2 rounded-full shadow-md">
+                      <Heart size={16} fill="red" color="red" />
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Content container with fixed height */}
@@ -69,6 +95,7 @@ export default function ProductDetails({
                           : "bg-gray-300 text-gray-500 cursor-not-allowed"
                       }`}
                     disabled={!product.inStock}
+                    onClick={() => handleCart(product._id)}
                   >
                     {product.inStock ? "Add to Cart" : "Sold Out"}
                   </button>
@@ -76,26 +103,7 @@ export default function ProductDetails({
                     href={`/shop/${product._id}`}
                     className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
+                    <Eye />
                   </Link>
                 </div>
               </div>

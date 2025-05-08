@@ -1,7 +1,24 @@
-import { Product } from "@/types/index";
 import axios from "axios";
 
-export const getTopThreeLiked = async (): Promise<Product[]> => {
+interface Product {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  tag: string;
+  inStock: boolean;
+  __v: number;
+}
+
+export interface TopLikedProduct {
+  likeCount: number;
+  product: Product;
+}
+
+type TopLikedProductsResponse = TopLikedProduct[];
+
+export const getTopThreeLiked = async (): Promise<TopLikedProductsResponse> => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}/likes/top`,

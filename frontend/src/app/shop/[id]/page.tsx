@@ -22,8 +22,9 @@ export default function ProductDetailsPage() {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
+      if (!id || !user) return;
       try {
-        const product = await fetchProdcuctDetails(id as string);
+        const product = await fetchProdcuctDetails(id as string, user.userId);
         setProductData(product);
         const stockData = await fetchProductStock(id as string);
         setMaxQuantity(stockData.stock || 10);
@@ -37,7 +38,7 @@ export default function ProductDetailsPage() {
     if (id) {
       fetchData();
     }
-  }, [id]);
+  }, [id, user]);
 
   if (!user || !id) return;
 
@@ -70,11 +71,12 @@ export default function ProductDetailsPage() {
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 mt-16">
-      <ProductDetailsView 
+      <ProductDetailsView
         productData={productData}
         maxQuantity={maxQuantity}
         productId={id as string}
         userId={user.userId}
+        like={productData.isLiked}
       />
       <SimilarProducts tag={productData.tag} />
     </div>
