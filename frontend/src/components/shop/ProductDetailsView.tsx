@@ -21,7 +21,7 @@ export default function ProductDetailsView({
   maxQuantity,
   productId,
   userId,
-  like
+  like,
 }: {
   productData: Product;
   maxQuantity: number;
@@ -63,6 +63,12 @@ export default function ProductDetailsView({
     if (response.success) {
       setIsAddingToCart(false);
       setMessage("Added to cart successfully!");
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
+    } else {
+      setIsAddingToCart(false);
+      setMessage(response.message);
       setTimeout(() => {
         setMessage("");
       }, 2000);

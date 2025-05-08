@@ -1,62 +1,35 @@
-'use client'
+"use client";
+import { getCart } from "@/api/cart/getCart";
+import { removeFromCart } from "@/api/cart/removeFromCart";
+import { updateQuantityAPI } from "@/api/cart/updateQuantityAPI";
 import CartItem from "@/components/cart/CartItem";
 import OrderSummary from "@/components/cart/OrderSummary";
 import Loader from "@/components/Loader";
-import { Product } from "@/types";
-import { ShoppingBag, Link } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { CartArrayType } from "@/types";
+import { ShoppingBag } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
-interface CartItemType {
-  product: Product;
-  quantity: number;
-  maxQuantity: number;
-}
-// Main Cart Page Component
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState<CartItemType[]>([]);
+  const [cartItems, setCartItems] = useState<CartArrayType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState<string>("");
   const router = useRouter();
+  const { user } = useAuth();
+
   useEffect(() => {
-    // Mock fetching cart data
-    // In a real app, you would fetch this from your API
     const fetchCart = async () => {
       try {
-    
-        // Mock data
-        const mockCartItems: CartItemType[] = [
-          {
-            product: {
-              _id: "prod123",
-              name: "Wireless pinktooth Headphones",
-              price: 1299,
-              image: "/api/placeholder/150/150",
-              description:
-                "High-quality wireless headphones with noise cancellation",
-              tag: "Electronics",
-              inStock: true,
-            },
-            quantity: 1,
-            maxQuantity: 5,
-          },
-          {
-            product: {
-              _id: "prod456",
-              name: "Smart Fitness Tracker",
-              price: 2499,
-              image: "/api/placeholder/150/150",
-              description:
-                "Track your fitness goals with this smart wearable device",
-              tag: "Wearables",
-              inStock: true,
-            },
-            quantity: 2,
-            maxQuantity: 10,
-          },
-        ];
-
-        setCartItems(mockCartItems);
+        if (!user) {
+          setIsLoading(false);
+          return;
+        }
+        const response = await getCart(user.userId);
+        if (response) {
+          setCartItems(response);
+        }
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching cart:", error);
@@ -66,36 +39,104 @@ export default function CartPage() {
     };
 
     fetchCart();
-  }, []);
+  }, [user]);
 
-  const updateQuantity = (productId: string, newQuantity: number) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.product._id === productId
-          ? { ...item, quantity: newQuantity }
-          : item
-      )
-    );
+  const updateQuantity = async (itemId: string, newQuantity: number) => {
+    if (!cartItems || !user) return;
+    setCartItems((prevItems) => {
+      if (!prevItems) return null;
 
-    // In a real app, you would also update the quantity in your backend
-    setMessage("Cart updated");
+      return {
+        ...prevItems,
+        items: prevItems.items.map((item) =>
+          item._id === itemId ? { ...item, quantity: newQuantity } : item
+        ),
+      };
+    });
+
+    try {
+      const item = cartItems.items.find((item) => item._id === itemId);
+      if (!item) return;
+
+      const response = await updateQuantityAPI(
+        user.userId,
+        item.productId._id,
+        newQuantity
+      );
+
+      if (!response) {
+        setMessage("Failed to update quantity. Please try again.");
+        fetchCart();
+      }
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+      setMessage("Failed to update quantity. Please try again.");
+      const fetchCart = async () => {
+        if (user) {
+          const response = await getCart(user.userId);
+          if (response) {
+            setCartItems(response);
+          }
+        }
+      };
+      fetchCart();
+    }
+
     setTimeout(() => setMessage(""), 2000);
   };
 
-  const removeItem = (productId: string) => {
-    setCartItems((prevItems) =>
-      prevItems.filter((item) => item.product._id !== productId)
-    );
+  const removeItem = async (itemId: string) => {
+    if (!cartItems || !user) return;
 
-    // In a real app, you would also remove the item from your backend
-    setMessage("Item removed from cart");
+    setCartItems((prevItems) => {
+      if (!prevItems) return null;
+
+      return {
+        ...prevItems,
+        items: prevItems.items.filter((item) => item.productId._id !== itemId),
+      };
+    });
+
+    try {
+      const response = await removeFromCart(user.userId, itemId);
+      setMessage(response.message);
+      setTimeout(() => setMessage(""), 2000);
+    } catch (error) {
+      console.error("Error removing item:", error);
+      setMessage("Failed to remove item. Please try again.");
+
+      const fetchCart = async () => {
+        if (user) {
+          const response = await getCart(user.userId);
+          if (response) {
+            setCartItems(response);
+          }
+        }
+      };
+      fetchCart();
+    }
+
     setTimeout(() => setMessage(""), 2000);
   };
 
   const handleCheckout = () => {
     setMessage("Proceeding to checkout...");
-    setTimeout(() => setMessage(""), 1000);
-    router.push("/checkout");
+    setTimeout(() => {
+      setMessage("");
+      router.push("/checkout");
+    }, 1000);
+  };
+
+  const fetchCart = async () => {
+    if (!user) return;
+    try {
+      const response = await getCart(user.userId);
+      if (response) {
+        setCartItems(response);
+      }
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+    }
   };
 
   return (
@@ -109,8 +150,8 @@ export default function CartPage() {
       )}
 
       {isLoading ? (
-        <Loader/>
-      ) : cartItems.length === 0 ? (
+        <Loader />
+      ) : !cartItems || cartItems.items.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-gray-400 mb-4">
             <ShoppingBag size={48} className="mx-auto" />
@@ -133,13 +174,13 @@ export default function CartPage() {
           <div className="lg:w-2/3">
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-lg font-medium text-gray-900 mb-4">
-                Cart Items ({cartItems.length})
+                Cart Items ({cartItems.items.length})
               </h2>
 
               <div className="space-y-2">
-                {cartItems.map((item) => (
+                {cartItems.items.map((item) => (
                   <CartItem
-                    key={item.product._id}
+                    key={item._id}
                     item={item}
                     updateQuantity={updateQuantity}
                     removeItem={removeItem}

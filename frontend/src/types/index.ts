@@ -300,7 +300,29 @@ export type CustomOrder = {
   name: string;
   description: string;
   image: string;
-  status: "pending" | "approved" | "completed"
+  status: "pending" | "approved" | "completed";
   createdAt: string;
   price: number;
+};
+
+export type CartArrayType = {
+  _id: string;
+  userId: string;
+  items: CartItemType[];
+  totalPrice: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CartItemType = {
+  productId: {
+    _id: string;
+    name: string;
+    description: string;
+    price: number;
+    image: string;
+    quantity: number; // maxQuantity
+  };
+  quantity: number; // current quantity in the cart
+  _id: string;
 };

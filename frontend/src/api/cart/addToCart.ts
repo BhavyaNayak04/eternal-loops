@@ -17,11 +17,20 @@ async function addToCart(
         quantity,
       }
     );
-    console.log("Add to cart response:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error adding to cart:", error);
-    throw error;
+    if (axios.isAxiosError(error)) {
+      return {
+        success: false,
+        message: error.response?.data.message || "An error occurred",
+      };
+    } else {
+      return {
+        success: false,
+        message: "An unexpected error occurred",
+      };
+    }
   }
 }
 

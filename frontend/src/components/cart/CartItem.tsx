@@ -1,13 +1,8 @@
 "use client";
 import Image from "next/image";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { Product } from "@/types";
-interface CartItemType {
-  product: Product;
-  quantity: number;
-  maxQuantity: number;
-}
-// Cart Item Component
+import { CartItemType } from "@/types";
+
 const CartItem = ({
   item,
   updateQuantity,
@@ -18,14 +13,14 @@ const CartItem = ({
   removeItem: (productId: string) => void;
 }) => {
   const incrementQuantity = () => {
-    if (item.quantity < item.maxQuantity) {
-      updateQuantity(item.product._id, item.quantity + 1);
+    if (item.quantity < item.productId.quantity) {
+      updateQuantity(item._id, item.quantity + 1);
     }
   };
 
   const decrementQuantity = () => {
     if (item.quantity > 1) {
-      updateQuantity(item.product._id, item.quantity - 1);
+      updateQuantity(item._id, item.quantity - 1);
     }
   };
 
@@ -33,8 +28,8 @@ const CartItem = ({
     <div className="flex flex-col sm:flex-row border-b border-gray-200 py-4">
       <div className="flex-shrink-0 w-full sm:w-24 h-24 mb-4 sm:mb-0 relative bg-gray-50 rounded-md overflow-hidden">
         <Image
-          src={item.product.image}
-          alt={item.product.name}
+          src={item.productId.image}
+          alt={item.productId.name}
           fill
           sizes="(max-width: 768px) 100vw, 96px"
           className="object-contain"
@@ -44,19 +39,22 @@ const CartItem = ({
       <div className="flex-grow sm:ml-4 flex flex-col justify-between">
         <div>
           <h3 className="text-sm font-medium text-gray-900">
-            {item.product.name}
+            {item.productId.name}
           </h3>
-          <p className="mt-1 text-xs text-gray-500">{item.product.tag}</p>
+          <p className="text-sm text-gray-500">{item.productId.description}</p>
+          <p className="text-sm text-gray-500">
+            Max Quantity: {item.productId.quantity}
+          </p>
         </div>
 
         <div className="flex justify-between items-end mt-2">
           <div className="text-sm font-medium text-gray-900">
-            Rs.{item.product.price}
+            Rs.{item.productId.price}
           </div>
 
           <div className="flex items-center">
             <button
-              onClick={() => removeItem(item.product._id)}
+              onClick={() => removeItem(item.productId._id)}
               className="text-gray-400 hover:text-red-500 mr-4"
               aria-label="Remove item"
             >
@@ -88,13 +86,13 @@ const CartItem = ({
               <button
                 className="w-6 h-6 bg-gray-100 border border-gray-300 flex items-center justify-center rounded-r-md hover:bg-gray-200 transition-colors"
                 onClick={incrementQuantity}
-                disabled={item.quantity >= item.maxQuantity}
+                disabled={item.quantity >= item.productId.quantity}
                 aria-label="Increase quantity"
               >
                 <Plus
                   size={12}
                   className={
-                    item.quantity >= item.maxQuantity
+                    item.quantity >= item.productId.quantity
                       ? "text-gray-400"
                       : "text-gray-700"
                   }

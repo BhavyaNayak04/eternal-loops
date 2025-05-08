@@ -17,10 +17,17 @@ export default function Products({
   const handleCart = async (id: string) => {
     if (!user) return;
     const response = await addToCart(user.userId, id, 1);
-    setMessage(response.message);
-    setTimeout(() => {
-      setMessage("");
-    }, 1000);
+    if (response.success) {
+      setMessage(response.message);
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
+    } else {
+      setMessage(response.message);
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
+    }
   };
   if (sortedProducts.length === 0) {
     return (
