@@ -4,30 +4,24 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { HeartIcon } from "lucide-react";
 import Loader from "../Loader";
-
-type CustomOrder = {
-  _id: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-  status: "pending" | "approved" | "in_progress" | "completed" | "rejected";
-  createdAt: string;
-  price?: number;
-};
+import { CustomOrder } from "@/types";
+import { getOrdersByUserId } from "@/api/custom/getOrdersByUserId";
+import { useAuth } from "@/context/AuthContext";
+import { revokeOrder } from "@/api/custom/revokeOrder";
 
 export default function CustomOrders() {
+  const { user } = useAuth();
   const [customOrders, setCustomOrders] = useState<CustomOrder[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCustomOrders = async () => {
       try {
-        const response = await fetch("/api/user/custom-orders");
-        if (!response.ok) {
-          throw new Error("Failed to fetch custom orders");
+        if (!user) {
+          return;
         }
-        const data = await response.json();
-        setCustomOrders(data.orders);
+        const response = await getOrdersByUserId(user.userId);
+        setCustomOrders(response);
       } catch (error) {
         console.error("Error fetching custom orders:", error);
       } finally {
@@ -36,20 +30,14 @@ export default function CustomOrders() {
     };
 
     fetchCustomOrders();
-  }, []);
+  }, [user]);
 
   const getStatusBadgeClass = (status: CustomOrder["status"]) => {
     switch (status) {
       case "pending":
         return "bg-yellow-100 text-yellow-800";
-      case "approved":
-        return "bg-blue-100 text-blue-800";
-      case "in_progress":
-        return "bg-purple-100 text-purple-800";
       case "completed":
         return "bg-green-100 text-green-800";
-      case "rejected":
-        return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -59,16 +47,19 @@ export default function CustomOrders() {
     switch (status) {
       case "pending":
         return "Pending Review";
-      case "approved":
-        return "Approved";
-      case "in_progress":
-        return "In Progress";
       case "completed":
         return "Completed";
-      case "rejected":
-        return "Rejected";
       default:
         return "Unknown";
+    }
+  };
+
+  const handleRevoke = async (_id: string) => {
+    const respone = await revokeOrder(_id);
+    if (respone.success) {
+      setCustomOrders((prevOrders) =>
+        prevOrders.filter((order) => order._id !== _id)
+      );
     }
   };
 
@@ -95,7 +86,7 @@ export default function CustomOrders() {
           Looking for something special? Request a custom crochet item!
         </p>
         <button
-          onClick={() => (window.location.href = "/custom-request")}
+          onClick={() => (window.location.href = "/custom")}
           className="mt-6 px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors"
         >
           Request Custom Item
@@ -107,9 +98,9 @@ export default function CustomOrders() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">My Custom Orders</h2>
+        <h2 className="text-2xl font-bold text-gray-800">My Orders</h2>
         <button
-          onClick={() => (window.location.href = "/custom-request")}
+          onClick={() => (window.location.href = "/custom")}
           className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors"
         >
           New Custom Request
@@ -125,10 +116,10 @@ export default function CustomOrders() {
             <div className="p-6">
               <div className="flex items-start gap-6">
                 <div className="relative h-32 w-32 flex-shrink-0 rounded-md overflow-hidden bg-gray-100">
-                  {order.imageUrl ? (
+                  {order.image ? (
                     <Image
-                      src={order.imageUrl}
-                      alt={order.title}
+                      src={order.image}
+                      alt={order.name}
                       fill
                       className="object-cover"
                     />
@@ -155,15 +146,23 @@ export default function CustomOrders() {
                 <div className="flex-1">
                   <div className="flex justify-between items-start">
                     <h3 className="text-lg font-medium text-gray-900">
-                      {order.title}
+                      {order.name}
                     </h3>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadgeClass(
-                        order.status
-                      )}`}
-                    >
-                      {getStatusLabel(order.status)}
-                    </span>
+                    <div className="flex justify-center items-center flex-col gap-3">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadgeClass(
+                          order.status
+                        )}`}
+                      >
+                        {getStatusLabel(order.status)}
+                      </span>
+                      <button
+                        onClick={() => handleRevoke(order._id)}
+                        className="text-sm text-red-500"
+                      >
+                        Revoke Order
+                      </button>
+                    </div>
                   </div>
 
                   <p className="mt-2 text-gray-600">{order.description}</p>
@@ -197,9 +196,7 @@ export default function CustomOrders() {
             </div>
 
             {/* Progress Tracker */}
-            {["pending", "approved", "in_progress", "completed"].includes(
-              order.status
-            ) && (
+            {["pending", "approved", "completed"].includes(order.status) && (
               <div className="px-6 pb-4">
                 <div className="relative">
                   <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200">
@@ -210,8 +207,6 @@ export default function CustomOrders() {
                             ? "25%"
                             : order.status === "approved"
                             ? "50%"
-                            : order.status === "in_progress"
-                            ? "75%"
                             : order.status === "completed"
                             ? "100%"
                             : "0%",
@@ -224,7 +219,6 @@ export default function CustomOrders() {
                       className={
                         order.status === "pending" ||
                         order.status === "approved" ||
-                        order.status === "in_progress" ||
                         order.status === "completed"
                           ? "text-rose-600 font-medium"
                           : ""
@@ -235,7 +229,6 @@ export default function CustomOrders() {
                     <span
                       className={
                         order.status === "approved" ||
-                        order.status === "in_progress" ||
                         order.status === "completed"
                           ? "text-rose-600 font-medium"
                           : ""
@@ -243,16 +236,7 @@ export default function CustomOrders() {
                     >
                       Approved
                     </span>
-                    <span
-                      className={
-                        order.status === "in_progress" ||
-                        order.status === "completed"
-                          ? "text-rose-600 font-medium"
-                          : ""
-                      }
-                    >
-                      In Progress
-                    </span>
+
                     <span
                       className={
                         order.status === "completed"

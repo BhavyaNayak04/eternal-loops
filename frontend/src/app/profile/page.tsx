@@ -66,7 +66,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6 md:p-8">
+        <div className="p-6 md:p-8">
           {activeTab === "profile" && <ProfileDetails user={user} />}
           {activeTab === "liked" && <LikedProducts />}
           {activeTab === "custom" && <CustomOrders />}

@@ -4,7 +4,7 @@ import CustomOrder from "../models/CustomOrder.js";
 export const getAllCustomOrders = async (_, res) => {
   try {
     const customOrders = await CustomOrder.find().select(
-      "name image description"
+      "name image description status createdAt price"
     );
     res.status(200).json(customOrders);
   } catch (error) {
@@ -89,6 +89,70 @@ export const updateCustomOrderStatus = async (req, res) => {
     res.status(500).json({
       message: "Failed to update custom order status",
       error: error.message,
+    });
+  }
+};
+
+export const getCustomOrdersByUserId = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const customOrders = await CustomOrder.find({ userId }).select(
+      "name image description status createdAt price"
+    );
+    res.status(200).json(customOrders);
+  } catch (error) {
+    console.error("Error fetching custom orders:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to fetch custom orders", error: error.message });
+  }
+};
+
+export const updatePrice = async (req, res) => {
+  const { orderId } = req.params;
+  const { price } = req.body;
+
+  try {
+    const updatedOrder = await CustomOrder.findOneAndUpdate(
+      { _id: orderId },
+      { price },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Custom order not found" });
+    }
+
+    res.status(200).json({
+      message: "Custom order price updated successfully",
+    });
+  } catch (error) {
+    console.error("Error updating custom order price:", error);
+    res.status(500).json({
+      message: "Failed to update custom order price",
+      error: error.message,
+    });
+  }
+};
+
+export const deleteCustomOrder = async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    const deletedOrder = await CustomOrder.findOneAndDelete({ _id: orderId });
+    if (!deletedOrder) {
+      return res.status(404).json({ message: "Custom order not found" });
+    }
+    res.status(200).json({
+      message: "Custom order deleted successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error deleting custom order:", error);
+    res.status(500).json({
+      message: "Failed to delete custom order",
+      error: error.message,
+      success: false,
     });
   }
 };

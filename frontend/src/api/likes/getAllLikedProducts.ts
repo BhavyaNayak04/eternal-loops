@@ -13,7 +13,7 @@ export const getAllLikedProducts = async (
         },
       }
     );
-    return response.data.message;
+    return response.data;
   } catch (error) {
     console.error("Error fetching cart count:", error);
     return [];

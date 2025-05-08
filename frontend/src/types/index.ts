@@ -294,3 +294,13 @@ export type UserType = {
   userId: string;
   token: string;
 };
+
+export type CustomOrder = {
+  _id: string;
+  name: string;
+  description: string;
+  image: string;
+  status: "pending" | "approved" | "completed"
+  createdAt: string;
+  price: number;
+};
