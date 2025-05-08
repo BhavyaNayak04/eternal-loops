@@ -14,7 +14,7 @@ export default function ContactUs() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: { target: { name: string; value: unknown } }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -22,7 +22,7 @@ export default function ContactUs() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -48,7 +48,8 @@ export default function ContactUs() {
           <div className="text-center">
             <h1 className="text-4xl font-bold text-rose-800">Contact Us</h1>
             <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
-              We'd love to hear from you! Reach out with questions or just to say hello
+              We would love to hear from you! Reach out with questions or just
+              to say hello
             </p>
           </div>
         </div>
@@ -246,7 +247,7 @@ export default function ContactUs() {
                       </h3>
                       <div className="mt-2 text-sm text-green-700">
                         <p>
-                          Thank you for reaching out. We'll get back to you as
+                          Thank you for reaching out. We will get back to you as
                           soon as possible.
                         </p>
                       </div>
