@@ -10,11 +10,10 @@ things remaining are:
 
 ~~1. jwt refresh token table~~
 
-2. state management like redux for frontend to manage user details efficiently - currently it relies on useContext, and currently jwt is not stored in the httpOnly cookie which is unsafe
-3. pagination for the apis and search features
-4. admin dashboard (ui and apis) for controlled access for my sister - mainly for adding new products, reviewing custom orders, etc.
-5. razor pay integration
-6. third party integration for tracking shipping
+2. pagination for the apis and search features
+3. admin dashboard (ui and apis) for controlled access for my sister - mainly for adding new products, reviewing custom orders, etc.
+4. razor pay integration
+5. third party integration for tracking shipping
 
 u can try this out by first creating ur own mongodb atlas, then paste the mongodb uri in the backend env. put ur own jwt secret. 
 frontend, there is a base url required, that is basically `http://localhost:5000/api`
