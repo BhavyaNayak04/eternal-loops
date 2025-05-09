@@ -36,6 +36,8 @@ const publicRoutes = [
   "/api/auth/register",
   "/api/auth/refresh-token",
   "/user/logout",
+  "/api/likes/top",
+  "/api/newsLetter",
 ];
 
 app.use((req, res, next) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -22,9 +22,15 @@ import { useAuth } from "@/context/AuthContext";
 import { navigation } from "@/utils/types";
 import Cart from "./Cart";
 
-export default function Example() {
+export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
+  const [mounted, setMounted] = useState(false);
+  
+  // Fix hydration mismatch by only rendering user-dependent elements after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="bg-white">
@@ -142,26 +148,35 @@ export default function Example() {
               ))}
             </div>
 
-            {user ? (
-              <div className="flex items-center space-x-4">
-                <Link href={"/shop"}>Shop</Link>
-                <Link href={"/profile"}>Profile</Link>
-              </div>
-            ) : (
-              <div className="space-y-6 px-4">
-                <Link
-                  href="/signin"
-                  className="-m-2 block p-2 font-medium text-gray-900"
-                >
-                  Sign in
-                </Link>
-                <Link
-                  href="/register"
-                  className="text-sm font-medium text-gray-700 hover:text-gray-800"
-                >
-                  Create account
-                </Link>
-              </div>
+            {/* Only render user-dependent content after client-side mount */}
+            {mounted && (
+              <>
+                {user ? (
+                  <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+                    <Link href="/shop" className="-m-2 block p-2 font-medium text-gray-900">
+                      Shop
+                    </Link>
+                    <Link href="/profile" className="-m-2 block p-2 font-medium text-gray-900">
+                      Profile
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+                    <Link
+                      href="/signin"
+                      className="-m-2 block p-2 font-medium text-gray-900"
+                    >
+                      Sign in
+                    </Link>
+                    <Link
+                      href="/register"
+                      className="-m-2 block p-2 font-medium text-gray-900"
+                    >
+                      Create account
+                    </Link>
+                  </div>
+                )}
+              </>
             )}
           </DialogPanel>
         </div>
@@ -312,29 +327,40 @@ export default function Example() {
               </PopoverGroup>
 
               <div className="ml-auto flex items-center">
-                {user ? (
-                  <div className="flex items-center space-x-4">
-                    <Link href={"/shop"}>Shop</Link>
-                    <Link href={"/profile"}>Profile</Link>
-                  </div>
-                ) : (
-                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                    <Link
-                      href="/signin"
-                      className="text-sm font-medium text-gray-700 hover:text-gray-800"
-                    >
-                      Sign in
-                    </Link>
-                    <span aria-hidden="true" className="h-6 w-px bg-gray-200" />
-                    <Link
-                      href="/register"
-                      className="text-sm font-medium text-gray-700 hover:text-gray-800"
-                    >
-                      Create account
-                    </Link>
-                  </div>
+                {/* Only render user-dependent content after client-side mount */}
+                {mounted && (
+                  <>
+                    {user ? (
+                      <div className="flex items-center space-x-4">
+                        <Link href="/shop" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                          Shop
+                        </Link>
+                        <Link href="/profile" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                          Profile
+                        </Link>
+                      </div>
+                    ) : (
+                      <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                        <Link
+                          href="/signin"
+                          className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                        >
+                          Sign in
+                        </Link>
+                        <span aria-hidden="true" className="h-6 w-px bg-gray-200" />
+                        <Link
+                          href="/register"
+                          className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                        >
+                          Create account
+                        </Link>
+                      </div>
+                    )}
+                  </>
                 )}
-                <Cart />
+                <div className="ml-4">
+                  <Cart />
+                </div>
               </div>
             </div>
           </div>

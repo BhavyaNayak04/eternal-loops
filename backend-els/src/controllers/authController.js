@@ -109,10 +109,12 @@ export const refreshAccessToken = async (req, res) => {
     );
 
     res.setHeader("Authorization", "Bearer " + newAccessToken);
+    console.log("New access token generated:", newAccessToken);
     res.status(200).json({ message: "Access token refreshed successfully" });
   } catch (err) {
+    console.error("Refresh token died :(");
     return res
-      .status(403)
+      .status(401)
       .json({ message: "Invalid or expired refresh token" });
   }
 };

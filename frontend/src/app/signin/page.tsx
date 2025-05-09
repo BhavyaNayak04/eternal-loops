@@ -3,18 +3,21 @@
 import { signIn } from "@/api/auth/signin";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 
 export default function SignInPage() {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const { login } = useAuth();
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [messageType, setMessageType] = useState<"error" | "success" | null>(
-    null
-  );
+  const [messageType, setMessageType] = useState<"error" | "success" | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -46,6 +49,17 @@ export default function SignInPage() {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  // Show a simple loading state until client-side hydration is complete
+  if (!mounted) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-pink-50 to-indigo-100">
+        <div className="p-8">
+          <Loader2 className="animate-spin h-8 w-8 text-pink-600" />
+        </div>
+      </div>
+    );
   }
 
   return (

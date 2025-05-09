@@ -24,7 +24,6 @@ export default function CartPage() {
     const fetchCart = async () => {
       try {
         if (!user) {
-          setIsLoading(false);
           return;
         }
         const response = await getCart(user.userId);
@@ -40,7 +39,7 @@ export default function CartPage() {
     };
 
     fetchCart();
-  }, [user]);
+  }, [router, user]);
 
   const updateQuantity = async (itemId: string, newQuantity: number) => {
     if (!cartItems || !user) return;
