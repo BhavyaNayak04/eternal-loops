@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import RefreshToken from "../models/RefreshToken.js";
 
 // Fetch user details by userId
 export const getUserDetails = async (req, res) => {
@@ -48,3 +49,23 @@ export const editUserProfile = async (req, res) => {
   }
 };
 
+export const logout = async (req, res) => {
+  try {
+    // Clear the refresh token from the database
+    const refreshToken = req.cookies.refreshToken;
+    if (refreshToken) {
+      await RefreshToken.findOneAndDelete({ token: refreshToken });
+    }
+    // Clear the refresh token cookie
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("Error during logout:", error);
+    res.status(500).json({ message: "Logout failed", error: error.message });
+  }
+};

@@ -1,31 +1,48 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import authRoutes from "./routes/authRoutes.js";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+
+import authRoutes from "./routes/authRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import newsLetterRoutes from "./routes/newsLetterRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import likeRoutes from "./routes/likeRoutes.js";
 import customOrderRoutes from "./routes/customOrderRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
+import verifyJWT from "./middleware/authenticate.js";
 
 dotenv.config();
 
 const app = express();
 const port = 5000;
 
+// CORS configuration
 const corsOptions = {
   origin: "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  exposedHeaders: ["Authorization"],
 };
 
-// Use CORS middleware
 app.use(cors(corsOptions));
-
-// Middleware
 app.use(express.json());
+app.use(cookieParser());
+
+const publicRoutes = [
+  "/api/auth/login",
+  "/api/auth/register",
+  "/api/auth/refresh-token",
+  "/user/logout",
+];
+
+app.use((req, res, next) => {
+  if (publicRoutes.includes(req.path)) {
+    return next();
+  }
+  verifyJWT(req, res, next);
+});
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -46,7 +63,7 @@ mongoose
     console.log("MongoDB connection error:", err);
   });
 
-// Start the server
+// Start server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });

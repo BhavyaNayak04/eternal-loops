@@ -2,8 +2,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import Cart from "../models/Cart.js";
+import RefreshToken from "../models/RefreshToken.js";
 
-// Register a new user
 export const register = async (req, res) => {
   const { name, email, contactNumber, password } = req.body;
 
@@ -30,13 +30,10 @@ export const register = async (req, res) => {
 
     await newCart.save();
 
-    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
     res.status(201).json({
-      token,
       message: "User registered successfully!",
       userId: newUser._id,
+      role: newUser.role,
     });
   } catch (err) {
     console.error(err);
@@ -44,7 +41,6 @@ export const register = async (req, res) => {
   }
 };
 
-// Login an existing user
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -62,11 +58,61 @@ export const login = async (req, res) => {
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    res
-      .status(200)
-      .json({ token, userId: user._id, message: "Login Successful!" });
+
+    const rf = jwt.sign({ userId: user._id }, process.env.REFRESH_SECRET, {
+      expiresIn: "7d",
+    });
+
+    const existingRefreshToken = await RefreshToken.findOne({
+      userId: user._id,
+    });
+
+    if (existingRefreshToken) {
+      await RefreshToken.findByIdAndUpdate(existingRefreshToken._id, {
+        token: rf,
+      });
+    } else {
+      const newRefreshToken = new RefreshToken({ userId: user._id, token: rf });
+      await newRefreshToken.save();
+    }
+
+    res.setHeader("Authorization", "Bearer " + token);
+    res.cookie("refreshToken", rf, {
+      httpOnly: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({
+      userId: user._id,
+      role: user.role,
+      message: "Login Successful!",
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const refreshAccessToken = async (req, res) => {
+  const refreshToken = req.cookies?.refreshToken;
+
+  if (!refreshToken)
+    return res.status(401).json({ message: "Refresh token missing" });
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+    const newAccessToken = jwt.sign(
+      { userId: decoded.userId },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.setHeader("Authorization", "Bearer " + newAccessToken);
+    res.status(200).json({ message: "Access token refreshed successfully" });
+  } catch (err) {
+    return res
+      .status(403)
+      .json({ message: "Invalid or expired refresh token" });
   }
 };
