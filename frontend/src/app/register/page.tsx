@@ -4,7 +4,6 @@ import { useState } from "react";
 import { register } from "@/api/auth/register";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
 import { Loader2 } from "lucide-react";
 
 export default function RegisterPage() {
@@ -13,7 +12,6 @@ export default function RegisterPage() {
   const [messageType, setMessageType] = useState<"error" | "success" | null>(
     null
   );
-  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -37,14 +35,9 @@ export default function RegisterPage() {
       setMessageType("success");
       setMessage(response.message || "Registration successful! Redirecting...");
 
-      if (response.token && response.userId) {
-        setMessageType("success");
-        setMessage("Login successful! Redirecting...");
-        login(response.token, response.userId);
-        setTimeout(() => {
-          router.push("/");
-        }, 800);
-      }
+      setTimeout(() => {
+        router.push("/signin");
+      }, 800);
     } catch (error: unknown) {
       setMessageType("error");
       if (error instanceof Error) {

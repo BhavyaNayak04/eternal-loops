@@ -9,6 +9,7 @@ import PastOrders from "@/components/profile/PastOrders";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { signout } from "@/api/user/signout";
 
 export default function ProfilePage() {
   const { user, logout } = useAuth();
@@ -40,8 +41,13 @@ export default function ProfilePage() {
 
   const handleSignOut = async () => {
     try {
-      logout();
-      router.push("/signin");
+      const response = await signout(user.token);
+      if (response.success) {
+        logout();
+        router.push("/signin");
+      } else {
+        console.error("Sign out failed:", response.message);
+      }
     } catch (error) {
       console.error("Error signing out:", error);
     }

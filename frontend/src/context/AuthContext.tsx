@@ -1,5 +1,5 @@
 // src/context/AuthContext.tsx
-'use client';
+"use client";
 import React, {
   createContext,
   useContext,
@@ -8,14 +8,14 @@ import React, {
   ReactNode,
 } from "react";
 
-// Define the structure of the authentication data (token and userId)
+// Define the structure of the authentication data
 interface AuthContextType {
-  user: { token: string; userId: string } | null;
-  login: (token: string, userId: string) => void;
+  user: { token: string; userId: string; role: string } | null;
+  login: (token: string, userId: string, role: string) => void;
   logout: () => void;
 }
 
-// Create the AuthContext with a default value of null
+// Create the AuthContext with a default value of undefined
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Custom hook to use the AuthContext
@@ -33,34 +33,38 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<{ token: string; userId: string } | null>(
-    null
-  );
+  const [user, setUser] = useState<{
+    token: string;
+    userId: string;
+    role: string;
+  } | null>(null);
 
-  // Load stored user data (token and userId) from localStorage on app start
+  // Load stored user data from localStorage on app start
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUserId = localStorage.getItem("userId");
-    if (storedToken && storedUserId) {
-      setUser({ token: storedToken, userId: storedUserId });
+    const storedRole = localStorage.getItem("role");
+    if (storedToken && storedUserId && storedRole) {
+      setUser({ token: storedToken, userId: storedUserId, role: storedRole });
     }
   }, []);
 
-  // Login function: Store token and userId in state and localStorage
-  const login = (token: string, userId: string) => {
-    setUser({ token, userId });
+  // Login function: Store token, userId, and role
+  const login = (token: string, userId: string, role: string) => {
+    setUser({ token, userId, role });
     localStorage.setItem("token", token);
     localStorage.setItem("userId", userId);
+    localStorage.setItem("role", role);
   };
 
-  // Logout function: Clear user data from state and localStorage
+  // Logout function: Clear all user-related data
   const logout = () => {
     setUser(null);
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("role");
   };
 
-  // Provide the context value to all child components
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}

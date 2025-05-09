@@ -30,7 +30,7 @@ export default function SignInPage() {
       if (result.token && result.userId) {
         setMessageType("success");
         setMessage("Login successful! Redirecting...");
-        login(result.token, result.userId);
+        login(result.token, result.userId, result.role);
         setTimeout(() => {
           router.push("/");
         }, 800);

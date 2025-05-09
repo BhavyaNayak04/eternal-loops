@@ -4,7 +4,8 @@ interface SignInResponse {
   success: boolean;
   message: string;
   userId: string;
-  token?: string;
+  role: string;
+  token: string;
 }
 
 export async function signIn(
@@ -14,17 +15,21 @@ export async function signIn(
   try {
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-      {
-        email,
-        password,
-      }
+      { email, password },
+      { withCredentials: true } //for refresh token cookie
     );
 
+    const authHeader = response.headers["authorization"];
+    const token = authHeader?.startsWith("Bearer ")
+      ? authHeader.split(" ")[1]
+      : "";
+    console.log("Token:", token);
     return {
       success: true,
       message: response.data.message,
-      token: response.data.token,
       userId: response.data.userId,
+      role: response.data.role,
+      token,
     };
   } catch (e: unknown) {
     if (axios.isAxiosError(e) && e.response) {
@@ -33,7 +38,8 @@ export async function signIn(
           success: false,
           message: e.response.data.message || "Unauthorized",
           userId: "",
-          token: undefined,
+          role: "",
+          token: "",
         };
       }
     }
@@ -41,7 +47,8 @@ export async function signIn(
       success: false,
       message: e instanceof Error ? e.message : "Unknown error",
       userId: "",
-      token: undefined,
+      role: "",
+      token: "",
     };
   }
 }
