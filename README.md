@@ -1,19 +1,74 @@
-## e commerce platform for my sister - eternal loops
+# eternal loops
 
-i have used next js, express js and mongo db for this project.
+Eternal Loops is product showcasing and businessing platform for crochet art built using Next.js, Express.js, and MongoDB, for my sister's crochet interest. It allows users to browse products, wishlist them, add items to cart, and place custom orders. The project includes both frontend and backend functionality with essential features integrated. It includes an admin dashboard for controlled access as well.
 
-ui is set up for the user part,
-functionalities are added like basic login signup, interactiviy like liking posts, exploring products, adding them to cart etc.
-basic apis are all created and integrated for user, cart, custom order, newsletter, cart, post likes.
+## tech stack
 
-things remaining are:
+* **Frontend:** Next.js
+* **Backend:** Express.js (TypeScript)
+* **Database:** MongoDB (Atlas)
 
-1. pagination for the apis and search features
-2. admin dashboard (ui and apis) for controlled access for my sister - mainly for adding new products, reviewing custom orders, etc.
-3. razor pay integration
-4. third party integration for tracking shipping
+## features
 
-u can try this out by first creating ur own mongodb atlas, then paste the mongodb uri in the backend env. put ur own jwt secret. 
-frontend, there is a base url required, that is basically `http://localhost:5000/api`
+* User registration and login using JWT Refresh and Access Tokens
+* Product exploration
+* Like functionality
+* Add to cart and place orders
+* Custom order request features
+* Newsletter subscription
+* Admin Dashboard
 
-ai is used for generating stuff but logic is definitely mine. i have built this in 3 days, and now kinda tired. i will come back to this when i am free.
+## getting started
+
+#### 1. clone the repository
+
+```bash
+git clone <repo-url>
+cd eternal-loops
+```
+
+#### 2. install dependencies
+
+Install dependencies separately for frontend and backend:
+
+```bash
+# In the frontend directory
+cd frontend
+npm install
+
+# In the backend directory
+cd ../backend
+npm install
+```
+
+#### 3. environment variables
+
+Refer to the `.env.template` files in both `frontend` and `backend` folders to understand which environment variables you need to configure.
+
+**For Backend (`backend/.env`):**
+
+* `MONGO_URI` – Your MongoDB Atlas connection string
+* `JWT_SECRET` – Secret key for access tokens
+* `REFRESH_SECRET` – Secret key for refresh tokens
+
+**For Frontend (`frontend/.env.local`):**
+
+* `NEXT_PUBLIC_BASE_URL` – Backend API base URL (e.g., `http://localhost:5000/api`)
+
+#### 4. run the servers
+
+```bash
+# Run backend
+cd backend
+npm run dev
+
+# Run frontend (in another terminal)
+cd frontend
+npm run dev
+```
+
+## remaining TODOs
+
+* Add **pagination** to APIs and implement **search** functionality
+* Integrate **Razorpay** for payments
+* Connect with a **third-party shipping/tracking API**
