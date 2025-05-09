@@ -4,8 +4,8 @@ Eternal Loops is a product showcasing and businessing platform for crochet art b
 
 ## tech stack
 
-* **Frontend:** Next.js
-* **Backend:** Express.js (TypeScript)
+* **Frontend:** Next.js (with Typescript)
+* **Backend:** Express.js
 * **Database:** MongoDB (Atlas)
 
 ## features
