@@ -8,11 +8,13 @@ import CustomOrders from "@/components/profile/CustomOrders";
 import PastOrders from "@/components/profile/PastOrders";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState("profile");
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -36,6 +38,15 @@ export default function ProfilePage() {
     return;
   }
 
+  const handleSignOut = async () => {
+    try {
+      logout();
+      router.push("/signin");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
   const tabs = [
     { id: "profile", label: "My Profile" },
     { id: "liked", label: "Liked Products" },
@@ -46,7 +57,15 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-rose-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-rose-800 mb-8">My Account</h1>
+        <div className="flex items-center mb-6 justify-between">
+          <h1 className="text-3xl font-bold text-rose-800 mb-8">My Account</h1>
+          <button
+            className="inline-flex p-2 rounded-b-md items-center text-md font-medium text-red-600 hover:text-red-800 transition-colors"
+            onClick={handleSignOut}
+          >
+            Sign Out
+          </button>
+        </div>
 
         <div className="mb-8 border-b border-rose-200">
           <div className="flex flex-wrap -mb-px">

@@ -12,7 +12,7 @@ const router = Router();
 
 router.get("/count/:userId", count);
 router.get("/:userId", getCartProducts);
-router.delete("/clear", clearCart); // TODO
+router.delete("/clear/:userId", clearCart);
 router.post("/add/:userId", addToCart);
 router.put("/update/:userId", updateQuantity);
 router.delete("/remove/:userId/:productId", removeFromCart);
