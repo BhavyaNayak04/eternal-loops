@@ -1,6 +1,6 @@
 # eternal loops
 
-Eternal Loops is product showcasing and businessing platform for crochet art built using Next.js, Express.js, and MongoDB, for my sister's crochet interest. It allows users to browse products, wishlist them, add items to cart, and place custom orders. The project includes both frontend and backend functionality with essential features integrated. It includes an admin dashboard for controlled access as well.
+Eternal Loops is a product showcasing and businessing platform for crochet art built using Next.js, Express.js, and MongoDB, for my sister's crochet interest. It allows users to browse products, wishlist them, add items to cart, and place custom orders. The project includes both frontend and backend functionality with essential features integrated. It includes an admin dashboard for controlled access as well.
 
 ## tech stack
 
