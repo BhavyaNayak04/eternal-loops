@@ -8,7 +8,7 @@ basic apis are all created and integrated for user, cart, custom order, newslett
 
 things remaining are:
 
-1. jwt refresh token table
+~~1. jwt refresh token table~~
 2. state management like redux for frontend to manage user details efficiently - currently it relies on useContext, and currently jwt is not stored in the httpOnly cookie which is unsafe
 3. pagination for the apis and search features
 4. admin dashboard (ui and apis) for controlled access for my sister - mainly for adding new products, reviewing custom orders, etc.
