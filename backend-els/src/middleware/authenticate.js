@@ -19,6 +19,7 @@ const verifyJWT = (req, res, next) => {
 
       return res.status(401).json({ message: "Invalid access token" });
     }
+    console.log("Decoded JWT:", decoded);
     req.user = decoded;
     next();
   });

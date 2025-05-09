@@ -7,7 +7,6 @@ import { getAllProducts } from "@/api/products/getAll";
 import { categories, priceRanges } from "@/utils/types";
 import Products from "@/components/shop/Products";
 import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
 
 export default function Shop() {
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -17,11 +16,9 @@ export default function Shop() {
   const [products, setProducts] = useState<Product[]>([]);
   const [sortBy, setSortBy] = useState("name");
   const { user } = useAuth();
-  const router = useRouter();
 
   useEffect(() => {
     if (!user) {
-      router.push("/signin");
       return;
     }
     const fetchProducts = async () => {

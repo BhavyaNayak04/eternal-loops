@@ -13,7 +13,9 @@ export default function SignInPage() {
   const { login } = useAuth();
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [messageType, setMessageType] = useState<"error" | "success" | null>(null);
+  const [messageType, setMessageType] = useState<"error" | "success" | null>(
+    null
+  );
 
   useEffect(() => {
     setMounted(true);
@@ -36,7 +38,11 @@ export default function SignInPage() {
         setMessage("Login successful! Redirecting...");
         login(result.token, result.userId, result.role);
         setTimeout(() => {
-          router.push("/");
+          if (result.role === "admin") {
+            router.push("/admin");
+          } else {
+            router.push("/");
+          }
         }, 800);
       } else {
         setMessageType("error");

@@ -26,7 +26,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
-  
+
   // Fix hydration mismatch by only rendering user-dependent elements after mount
   useEffect(() => {
     setMounted(true);
@@ -153,10 +153,16 @@ export default function Navbar() {
               <>
                 {user ? (
                   <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                    <Link href="/shop" className="-m-2 block p-2 font-medium text-gray-900">
+                    <Link
+                      href="/shop"
+                      className="-m-2 block p-2 font-medium text-gray-900"
+                    >
                       Shop
                     </Link>
-                    <Link href="/profile" className="-m-2 block p-2 font-medium text-gray-900">
+                    <Link
+                      href="/profile"
+                      className="-m-2 block p-2 font-medium text-gray-900"
+                    >
                       Profile
                     </Link>
                   </div>
@@ -332,10 +338,16 @@ export default function Navbar() {
                   <>
                     {user ? (
                       <div className="flex items-center space-x-4">
-                        <Link href="/shop" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                        <Link
+                          href="/shop"
+                          className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                        >
                           Shop
                         </Link>
-                        <Link href="/profile" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                        <Link
+                          href="/profile"
+                          className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                        >
                           Profile
                         </Link>
                       </div>
@@ -347,7 +359,10 @@ export default function Navbar() {
                         >
                           Sign in
                         </Link>
-                        <span aria-hidden="true" className="h-6 w-px bg-gray-200" />
+                        <span
+                          aria-hidden="true"
+                          className="h-6 w-px bg-gray-200"
+                        />
                         <Link
                           href="/register"
                           className="text-sm font-medium text-gray-700 hover:text-gray-800"
@@ -358,9 +373,11 @@ export default function Navbar() {
                     )}
                   </>
                 )}
-                <div className="ml-4">
-                  <Cart />
-                </div>
+                {user ? (
+                  <div className="ml-4">
+                    {user.role !== "admin" && <Cart />}
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>

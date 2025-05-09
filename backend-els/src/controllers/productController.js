@@ -137,3 +137,19 @@ export const getProductStock = async (req, res) => {
       .json({ message: "Failed to fetch product", error: error.message });
   }
 };
+
+export const getAllProdutsForAdmin = async (req, res) => {
+  const role  = req.user.role;
+  if (role !== "admin") {
+    return res.status(403).json({ message: "Access denied" });
+  }
+  try {
+    const products = await Product.find();
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Failed to fetch products", error: error.message });
+  }
+};

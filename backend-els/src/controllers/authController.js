@@ -55,13 +55,21 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
-    const rf = jwt.sign({ userId: user._id }, process.env.REFRESH_SECRET, {
-      expiresIn: "7d",
-    });
+    const rf = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.REFRESH_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
 
     const existingRefreshToken = await RefreshToken.findOne({
       userId: user._id,
@@ -103,7 +111,7 @@ export const refreshAccessToken = async (req, res) => {
   try {
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
     const newAccessToken = jwt.sign(
-      { userId: decoded.userId },
+      { userId: decoded.userId, role: decoded.role },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );

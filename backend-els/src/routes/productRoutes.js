@@ -6,6 +6,7 @@ import {
   updateProduct,
   deleteProduct,
   getProductStock,
+  getAllProdutsForAdmin,
 } from "../controllers/productController.js";
 
 const router = express.Router();
@@ -16,5 +17,6 @@ router.get("/get/:productId/:userId", getProductById); // Get a product by ID
 router.put("/update/:id", updateProduct); // Update a product
 router.delete("/delete/:id", deleteProduct); // Delete a product
 router.get("/stock/:id", getProductStock); // Get a product by ID
+router.get("/getAll", getAllProdutsForAdmin); 
 
 export default router;
