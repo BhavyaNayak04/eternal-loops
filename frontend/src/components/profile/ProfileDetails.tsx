@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { UserType } from "@/types";
+import { UserType } from "@/utils/types";
 import { getUser } from "@/api/user/getUser";
 import { getProfile } from "@/api/user/updateUser";
 

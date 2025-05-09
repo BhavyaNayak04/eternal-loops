@@ -1,4 +1,5 @@
 import axios from "axios";
+import API from "@/utils/api";
 
 interface RegisterResponse {
   success: boolean;
@@ -8,7 +9,7 @@ interface RegisterResponse {
 
 export async function registerEmail(email: string): Promise<RegisterResponse> {
   try {
-    const response = await axios.post(
+    const response = await API.post(
       `${process.env.NEXT_PUBLIC_API_URL}/newsletter/register`,
       { email },
       {

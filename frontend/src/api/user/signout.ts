@@ -1,10 +1,10 @@
-import axios from "axios";
+import API from "@/utils/api";
 
 export const signout = async (
   token: string
 ): Promise<{ message: string; success: boolean }> => {
   try {
-    const response = await axios.post(
+    const response = await API.post(
       `${process.env.NEXT_PUBLIC_API_URL}/user/logout`,
       {},
       {

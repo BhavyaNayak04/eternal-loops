@@ -1,4 +1,5 @@
 import axios from "axios";
+import API from "@/utils/api";
 
 interface Response {
   message: string;
@@ -31,7 +32,7 @@ export const order = async (formData: Order): Promise<Response> => {
       payload.inspirationLink = formData.inspirationLink;
     }
 
-    const response = await axios.post(
+    const response = await API.post(
       `${process.env.NEXT_PUBLIC_API_URL}/custom-orders/add`,
       payload,
       {

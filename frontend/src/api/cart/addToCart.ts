@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import API from "@/utils/api"
 interface AddToCartResponse {
   success: boolean;
   message: string;
@@ -10,7 +10,7 @@ async function addToCart(
   quantity: number
 ): Promise<AddToCartResponse> {
   try {
-    const response = await axios.post(
+    const response = await API.post(
       `${process.env.NEXT_PUBLIC_API_URL}/cart/add/${userId}`,
       {
         productId,

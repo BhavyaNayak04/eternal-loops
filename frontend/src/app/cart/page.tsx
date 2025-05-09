@@ -7,7 +7,7 @@ import CartItem from "@/components/cart/CartItem";
 import OrderSummary from "@/components/cart/OrderSummary";
 import Loader from "@/components/Loader";
 import { useAuth } from "@/context/AuthContext";
-import { CartArrayType } from "@/types";
+import { CartArrayType } from "@/utils/types";
 import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

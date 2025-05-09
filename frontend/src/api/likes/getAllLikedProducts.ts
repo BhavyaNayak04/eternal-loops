@@ -1,11 +1,11 @@
-import { Product } from "@/types";
-import axios from "axios";
+import { Product } from "@/utils/types";
+import API from "@/utils/api";
 
 export const getAllLikedProducts = async (
   userId: string
 ): Promise<Product[]> => {
   try {
-    const response = await axios.get(
+    const response = await API.get(
       `${process.env.NEXT_PUBLIC_API_URL}/likes/user/${userId}`,
       {
         headers: {

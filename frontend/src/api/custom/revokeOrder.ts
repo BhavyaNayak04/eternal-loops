@@ -1,10 +1,10 @@
-import axios from "axios";
+import API from "@/utils/api";
 
 export async function revokeOrder(
   orderId: string
 ): Promise<{ success: boolean; message: string }> {
   try {
-    const response = await axios.delete(
+    const response = await API.delete(
       `${process.env.NEXT_PUBLIC_API_URL}/custom-orders/revoke/${orderId}`
     );
 

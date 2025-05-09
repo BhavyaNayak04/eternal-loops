@@ -1,6 +1,6 @@
 // Product.tsx
 import addToCart from "@/api/cart/addToCart";
-import { Product } from "@/types/index";
+import { Product } from "@/utils/types";
 import { Eye, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

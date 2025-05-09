@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "@/utils/api";
 
 interface ToggleLikeResponse {
   message: string;
@@ -11,7 +11,7 @@ export const toggleLike = async (
   action: string
 ): Promise<ToggleLikeResponse> => {
   try {
-    const response = await axios.post(
+    const response = await API.post(
       `${process.env.NEXT_PUBLIC_API_URL}/likes/toggleLike`,
       {
         userId: userId,

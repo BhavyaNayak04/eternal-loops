@@ -7,7 +7,7 @@ import { HeartIcon, ShoppingCartIcon } from "lucide-react";
 import Loader from "../Loader";
 import { getAllLikedProducts } from "@/api/likes/getAllLikedProducts";
 import { useAuth } from "@/context/AuthContext";
-import { Product } from "@/types";
+import { Product } from "@/utils/types";
 import addToCart from "@/api/cart/addToCart";
 
 export default function LikedProducts() {

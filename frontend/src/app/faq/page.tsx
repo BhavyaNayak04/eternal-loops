@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Footer from "@/components/home/Footer";
-import { faqCategories } from "@/types/index";
+import { faqCategories } from "@/utils/types";
 export default function FAQs() {
   const [activeCategory, setActiveCategory] = useState(faqCategories[0].id);
   const [openItems, setOpenItems] = useState<number[]>([]);

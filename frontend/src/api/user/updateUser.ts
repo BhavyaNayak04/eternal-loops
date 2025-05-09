@@ -1,5 +1,5 @@
-import { User } from "@/types";
-import axios from "axios";
+import { User } from "@/utils/types";
+import API from "@/utils/api";
 
 export const getProfile = async (
   userId: string,
@@ -7,7 +7,7 @@ export const getProfile = async (
   address: string
 ): Promise<User> => {
   try {
-    const response = await axios.put(
+    const response = await API.put(
       `${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`,
       {
         contactNumber,

@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Footer from "@/components/home/Footer";
-import { Product } from "@/types/index";
+import { Product } from "@/utils/types";
 import { getAllProducts } from "@/api/products/getAll";
-import { categories, priceRanges } from "@/types/index";
+import { categories, priceRanges } from "@/utils/types";
 import Products from "@/components/shop/Products";
 import { useAuth } from "@/context/AuthContext";
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import API from "@/utils/api";
 interface SignInResponse {
   success: boolean;
   message: string;
@@ -13,7 +13,7 @@ export async function signIn(
   password: string
 ): Promise<SignInResponse> {
   try {
-    const response = await axios.post(
+    const response = await API.post(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
       { email, password },
       { withCredentials: true } //for refresh token cookie
@@ -23,7 +23,7 @@ export async function signIn(
     const token = authHeader?.startsWith("Bearer ")
       ? authHeader.split(" ")[1]
       : "";
-    console.log("Token:", token);
+
     return {
       success: true,
       message: response.data.message,
@@ -32,20 +32,10 @@ export async function signIn(
       token,
     };
   } catch (e: unknown) {
-    if (axios.isAxiosError(e) && e.response) {
-      if (e.response.status === 401) {
-        return {
-          success: false,
-          message: e.response.data.message || "Unauthorized",
-          userId: "",
-          role: "",
-          token: "",
-        };
-      }
-    }
+    console.error("Error during sign-in:", e);
     return {
       success: false,
-      message: e instanceof Error ? e.message : "Unknown error",
+      message: "Invalid credentials",
       userId: "",
       role: "",
       token: "",

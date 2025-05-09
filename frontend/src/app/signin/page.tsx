@@ -19,6 +19,7 @@ export default function SignInPage() {
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsLoading(true);
+    setMessage(null);
 
     try {
       const formData = new FormData(event.currentTarget);
@@ -37,7 +38,6 @@ export default function SignInPage() {
       } else {
         setMessageType("error");
         setMessage(result.message || "Login failed. Please try again.");
-        console.error("Login failed:", result.message);
       }
     } catch (error) {
       setMessageType("error");

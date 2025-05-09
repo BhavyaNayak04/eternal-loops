@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import Loader from "@/components/Loader";
 import { Info } from "lucide-react";
 import Link from "next/link";
-import { Product } from "@/types";
+import { Product } from "@/utils/types";
 import SimilarProducts from "@/components/shop/SimilarProducts";
 import { useAuth } from "@/context/AuthContext";
 import ProductDetailsView from "@/components/shop/ProductDetailsView";

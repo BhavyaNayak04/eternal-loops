@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "@/utils/api"
 
 export const updateQuantityAPI = async (
   userId: string,
@@ -6,7 +6,7 @@ export const updateQuantityAPI = async (
   quantity: number
 ) => {
   try {
-    const response = await axios.put(
+    const response = await API.put(
       `${process.env.NEXT_PUBLIC_API_URL}/cart/update/${userId}`,
       {
         productId,

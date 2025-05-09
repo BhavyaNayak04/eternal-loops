@@ -1,5 +1,5 @@
+import API from "@/utils/api";
 import axios from "axios";
-
 interface RegisterResponse {
   success: boolean;
   message: string;
@@ -14,7 +14,7 @@ export async function register(formData: {
   password: string;
 }): Promise<RegisterResponse> {
   try {
-    const response = await axios.post(
+    const response = await API.post(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
       formData
     );

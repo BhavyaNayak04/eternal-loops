@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { HeartIcon } from "lucide-react";
 import Loader from "../Loader";
-import { CustomOrder } from "@/types";
+import { CustomOrder } from "@/utils/types";
 import { getOrdersByUserId } from "@/api/custom/getOrdersByUserId";
 import { useAuth } from "@/context/AuthContext";
 import { revokeOrder } from "@/api/custom/revokeOrder";

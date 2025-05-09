@@ -1,9 +1,9 @@
-import axios from "axios";
-import { CustomOrder } from "@/types/index";
+import API from "@/utils/api"
+import { CustomOrder } from "@/utils/types";
 
 export async function getAllOrders(): Promise<CustomOrder[]> {
   try {
-    const response = await axios.get(
+    const response = await API.get(
       `${process.env.NEXT_PUBLIC_API_URL}/custom-order/all`
     );
     console.log(response.data);

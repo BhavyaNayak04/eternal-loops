@@ -1,7 +1,7 @@
 import Footer from "@/components/home/Footer";
 import Link from "next/link";
-import { featuredProducts } from "@/types/index";
-import { testimonials } from "@/types/index";
+import { featuredProducts } from "@/utils/types";
+import { testimonials } from "@/utils/types";
 import NewsLetter from "@/components/home/NewsLetter";
 import Testimonials from "@/components/home/Testimonials";
 import InstagramFeed from "@/components/home/InstagramFeed";

@@ -1,8 +1,8 @@
-import axios from "axios";
+import API from "@/utils/api"
 
 export const getCart = async (userId: string) => {
   try {
-    const response = await axios.get(
+    const response = await API.get(
       `${process.env.NEXT_PUBLIC_API_URL}/cart/${userId}`,
       {
         headers: {

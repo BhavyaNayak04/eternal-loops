@@ -1,8 +1,8 @@
-import axios from "axios";
+import API from "@/utils/api"
 
 export const removeFromCart = async (userId: string, productId: string) => {
   try {
-    const response = await axios.delete(
+    const response = await API.delete(
       `${process.env.NEXT_PUBLIC_API_URL}/cart/remove/${userId}/${productId}`
     );
     return response.data;

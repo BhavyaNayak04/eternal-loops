@@ -3,19 +3,51 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { CartArrayType } from "@/types";
+import { CartArrayType } from "@/utils/types";
 import { getCart } from "@/api/cart/getCart";
 import Loader from "@/components/Loader";
-import { CheckCircle, ChevronDown, MapPin, ArrowRight, CreditCard, Truck } from "lucide-react";
+import {
+  CheckCircle,
+  ChevronDown,
+  MapPin,
+  ArrowRight,
+  CreditCard,
+  Truck,
+} from "lucide-react";
 
 // Karnataka districts
 const karnatakaDistricts = [
-  "Bengaluru Urban", "Bengaluru Rural", "Mysuru", "Mangaluru", "Belagavi", 
-  "Hubballi-Dharwad", "Kalaburagi", "Davanagere", "Ballari", "Vijayapura", 
-  "Shivamogga", "Tumakuru", "Raichur", "Bidar", "Gadag", "Koppal", "Bagalkote", 
-  "Chamarajanagara", "Chikkaballapura", "Chikkamagaluru", "Chitradurga", 
-  "Dakshina Kannada", "Hassan", "Haveri", "Kodagu", "Kolar", "Mandya", 
-  "Ramanagara", "Udupi", "Uttara Kannada", "Yadgir"
+  "Bengaluru Urban",
+  "Bengaluru Rural",
+  "Mysuru",
+  "Mangaluru",
+  "Belagavi",
+  "Hubballi-Dharwad",
+  "Kalaburagi",
+  "Davanagere",
+  "Ballari",
+  "Vijayapura",
+  "Shivamogga",
+  "Tumakuru",
+  "Raichur",
+  "Bidar",
+  "Gadag",
+  "Koppal",
+  "Bagalkote",
+  "Chamarajanagara",
+  "Chikkaballapura",
+  "Chikkamagaluru",
+  "Chitradurga",
+  "Dakshina Kannada",
+  "Hassan",
+  "Haveri",
+  "Kodagu",
+  "Kolar",
+  "Mandya",
+  "Ramanagara",
+  "Udupi",
+  "Uttara Kannada",
+  "Yadgir",
 ];
 
 export default function CheckoutPage() {
@@ -55,7 +87,9 @@ export default function CheckoutPage() {
         const response = await getCart(user.userId);
         if (response) {
           if (response.items.length === 0) {
-            setMessage("Your cart is empty. Add items to proceed with checkout.");
+            setMessage(
+              "Your cart is empty. Add items to proceed with checkout."
+            );
             router.push("/shop");
           } else {
             setCartItems(response);
@@ -73,14 +107,17 @@ export default function CheckoutPage() {
   }, [user, router]);
 
   // Handle form changes
-  const handleShippingInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleShippingInfoChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setShippingInfo((prev) => ({ ...prev, [name]: value }));
   };
 
   // Form validation
   const validateShippingInfo = () => {
-    const { fullName, phone, email, addressLine1, city, pincode } = shippingInfo;
+    const { fullName, phone, email, addressLine1, city, pincode } =
+      shippingInfo;
     if (!fullName || !phone || !email || !addressLine1 || !city || !pincode) {
       setMessage("Please fill all required fields");
       return false;
@@ -150,14 +187,15 @@ export default function CheckoutPage() {
   const makePayment = async () => {
     try {
       await initializeRazorpay();
-      
+
       // In a real application, you would call your API to create an order
       // For demo purposes, we're mocking this part
       const orderAmount = calculateTotal() * 100; // Razorpay uses amount in paise
-      
+
       // Mock order creation
-      const mockOrderId = "order_" + Math.random().toString(36).substring(2, 15);
-      
+      const mockOrderId =
+        "order_" + Math.random().toString(36).substring(2, 15);
+
       const options = {
         key: "rzp_test_YOUR_KEY_ID", // Replace with your actual test key in production
         amount: orderAmount,
@@ -174,16 +212,16 @@ export default function CheckoutPage() {
         prefill: {
           name: shippingInfo.fullName,
           email: shippingInfo.email,
-          contact: shippingInfo.phone
+          contact: shippingInfo.phone,
         },
         notes: {
-          address: `${shippingInfo.addressLine1}, ${shippingInfo.addressLine2}, ${shippingInfo.city}, ${shippingInfo.district}, ${shippingInfo.state}, ${shippingInfo.pincode}`
+          address: `${shippingInfo.addressLine1}, ${shippingInfo.addressLine2}, ${shippingInfo.city}, ${shippingInfo.district}, ${shippingInfo.state}, ${shippingInfo.pincode}`,
         },
         theme: {
-          color: "#db2777" // pink-600
-        }
+          color: "#db2777", // pink-600
+        },
       };
-      
+
       // @ts-ignore - Razorpay is loaded dynamically
       const razorpayInstance = new window.Razorpay(options);
       razorpayInstance.open();
@@ -225,32 +263,70 @@ export default function CheckoutPage() {
       {/* Checkout Steps */}
       <div className="mb-8">
         <div className="flex items-center justify-between">
-          <div className={`flex items-center ${step >= 1 ? "text-pink-600" : "text-gray-400"}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? "bg-pink-600 text-white" : "bg-gray-200"}`}>
+          <div
+            className={`flex items-center ${
+              step >= 1 ? "text-pink-600" : "text-gray-400"
+            }`}
+          >
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                step >= 1 ? "bg-pink-600 text-white" : "bg-gray-200"
+              }`}
+            >
               1
             </div>
             <span className="ml-2 text-sm font-medium">Shipping</span>
           </div>
-          <div className={`h-1 w-16 ${step >= 2 ? "bg-pink-600" : "bg-gray-200"}`}></div>
-          
-          <div className={`flex items-center ${step >= 2 ? "text-pink-600" : "text-gray-400"}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? "bg-pink-600 text-white" : "bg-gray-200"}`}>
+          <div
+            className={`h-1 w-16 ${step >= 2 ? "bg-pink-600" : "bg-gray-200"}`}
+          ></div>
+
+          <div
+            className={`flex items-center ${
+              step >= 2 ? "text-pink-600" : "text-gray-400"
+            }`}
+          >
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                step >= 2 ? "bg-pink-600 text-white" : "bg-gray-200"
+              }`}
+            >
               2
             </div>
             <span className="ml-2 text-sm font-medium">Delivery</span>
           </div>
-          <div className={`h-1 w-16 ${step >= 3 ? "bg-pink-600" : "bg-gray-200"}`}></div>
-          
-          <div className={`flex items-center ${step >= 3 ? "text-pink-600" : "text-gray-400"}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 3 ? "bg-pink-600 text-white" : "bg-gray-200"}`}>
+          <div
+            className={`h-1 w-16 ${step >= 3 ? "bg-pink-600" : "bg-gray-200"}`}
+          ></div>
+
+          <div
+            className={`flex items-center ${
+              step >= 3 ? "text-pink-600" : "text-gray-400"
+            }`}
+          >
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                step >= 3 ? "bg-pink-600 text-white" : "bg-gray-200"
+              }`}
+            >
               3
             </div>
             <span className="ml-2 text-sm font-medium">Payment</span>
           </div>
-          <div className={`h-1 w-16 ${step >= 4 ? "bg-pink-600" : "bg-gray-200"}`}></div>
-          
-          <div className={`flex items-center ${step >= 4 ? "text-pink-600" : "text-gray-400"}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 4 ? "bg-pink-600 text-white" : "bg-gray-200"}`}>
+          <div
+            className={`h-1 w-16 ${step >= 4 ? "bg-pink-600" : "bg-gray-200"}`}
+          ></div>
+
+          <div
+            className={`flex items-center ${
+              step >= 4 ? "text-pink-600" : "text-gray-400"
+            }`}
+          >
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                step >= 4 ? "bg-pink-600 text-white" : "bg-gray-200"
+              }`}
+            >
               4
             </div>
             <span className="ml-2 text-sm font-medium">Confirmation</span>
@@ -389,8 +465,8 @@ export default function CheckoutPage() {
                           </option>
                         ))}
                       </select>
-                      <ChevronDown 
-                        size={16} 
+                      <ChevronDown
+                        size={16}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                       />
                     </div>
@@ -421,9 +497,11 @@ export default function CheckoutPage() {
                 </h2>
 
                 <div className="space-y-4">
-                  <div 
+                  <div
                     className={`border rounded-lg p-4 cursor-pointer ${
-                      deliveryOption === "standard" ? "border-pink-500 bg-pink-50" : "border-gray-200"
+                      deliveryOption === "standard"
+                        ? "border-pink-500 bg-pink-50"
+                        : "border-gray-200"
                     }`}
                     onClick={() => setDeliveryOption("standard")}
                   >
@@ -445,9 +523,11 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                  <div 
+                  <div
                     className={`border rounded-lg p-4 cursor-pointer ${
-                      deliveryOption === "express" ? "border-pink-500 bg-pink-50" : "border-gray-200"
+                      deliveryOption === "express"
+                        ? "border-pink-500 bg-pink-50"
+                        : "border-gray-200"
                     }`}
                     onClick={() => setDeliveryOption("express")}
                   >
@@ -470,7 +550,9 @@ export default function CheckoutPage() {
 
                 <div className="mt-6 p-3 bg-blue-50 rounded-md">
                   <p className="text-sm text-blue-700">
-                    <span className="font-medium">Free standard delivery on orders above ₹500!</span>
+                    <span className="font-medium">
+                      Free standard delivery on orders above ₹500!
+                    </span>
                   </p>
                 </div>
               </div>
@@ -485,24 +567,27 @@ export default function CheckoutPage() {
                 </h2>
 
                 <div className="space-y-4">
-                  <div 
+                  <div
                     className={`border rounded-lg p-4 cursor-pointer ${
-                      paymentMethod === "razorpay" ? "border-pink-500 bg-pink-50" : "border-gray-200"
+                      paymentMethod === "razorpay"
+                        ? "border-pink-500 bg-pink-50"
+                        : "border-gray-200"
                     }`}
                     onClick={() => setPaymentMethod("razorpay")}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <div className="w-12 h-8 bg-gray-100 rounded-md flex items-center justify-center mr-3">
-                          <Image 
-                            src="/razorpay-logo.png" 
-                            alt="Razorpay" 
+                          <Image
+                            src="/razorpay-logo.png"
+                            alt="Razorpay"
                             className="h-5 w-auto object-contain"
                             width={24}
                             height={24}
                             onError={(e) => {
                               // Fallback if image doesn't load
-                              e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23072654' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E";
+                              e.currentTarget.src =
+                                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23072654' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E";
                             }}
                           />
                         </div>
@@ -519,16 +604,29 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                  <div 
+                  <div
                     className={`border rounded-lg p-4 cursor-pointer ${
-                      paymentMethod === "cod" ? "border-pink-500 bg-pink-50" : "border-gray-200"
+                      paymentMethod === "cod"
+                        ? "border-pink-500 bg-pink-50"
+                        : "border-gray-200"
                     }`}
                     onClick={() => setPaymentMethod("cod")}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <div className="w-12 h-8 bg-gray-100 rounded-md flex items-center justify-center mr-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-700">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="text-gray-700"
+                          >
                             <rect x="2" y="6" width="20" height="12" rx="2" />
                             <circle cx="12" cy="12" r="2" />
                           </svg>
@@ -550,7 +648,8 @@ export default function CheckoutPage() {
                 {paymentMethod === "cod" && (
                   <div className="mt-4 p-3 bg-yellow-50 rounded-md">
                     <p className="text-sm text-yellow-700">
-                      <span className="font-medium">Note:</span> A ₹20 handling fee will be added for Cash on Delivery orders.
+                      <span className="font-medium">Note:</span> A ₹20 handling
+                      fee will be added for Cash on Delivery orders.
                     </p>
                   </div>
                 )}
@@ -567,14 +666,16 @@ export default function CheckoutPage() {
                   Order Confirmed!
                 </h2>
                 <p className="text-gray-600 mb-6">
-                  Thank you for your purchase. Your order has been placed successfully.
+                  Thank you for your purchase. Your order has been placed
+                  successfully.
                 </p>
                 <div className="bg-gray-50 rounded-lg p-4 mx-auto max-w-md mb-6">
                   <p className="text-sm text-gray-500 mb-1">Order ID:</p>
                   <p className="font-medium text-gray-900">{orderId}</p>
                 </div>
                 <p className="text-sm text-gray-600 mb-6">
-                  You will receive an email confirmation with your order details shortly.
+                  You will receive an email confirmation with your order details
+                  shortly.
                 </p>
                 <div className="flex justify-center space-x-4">
                   <button
@@ -638,7 +739,9 @@ export default function CheckoutPage() {
         <div className="lg:w-1/3">
           {step < 4 && cartItems && (
             <div className="bg-white rounded-lg shadow-sm p-6 sticky top-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Order Summary</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
+                Order Summary
+              </h2>
 
               {/* Item List */}
               <div className="max-h-60 overflow-y-auto mb-4 space-y-3">
@@ -672,17 +775,21 @@ export default function CheckoutPage() {
               <div className="border-t border-gray-200 pt-4 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="font-medium">₹{calculateSubtotal().toFixed(2)}</span>
+                  <span className="font-medium">
+                    ₹{calculateSubtotal().toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">GST (18%)</span>
-                  <span className="font-medium">₹{calculateGST().toFixed(2)}</span>
+                  <span className="font-medium">
+                    ₹{calculateGST().toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Shipping</span>
                   <span className="font-medium">
-                    {calculateDeliveryCharge() === 0 
-                      ? "FREE" 
+                    {calculateDeliveryCharge() === 0
+                      ? "FREE"
                       : `₹${calculateDeliveryCharge().toFixed(2)}`}
                   </span>
                 </div>
@@ -694,7 +801,13 @@ export default function CheckoutPage() {
                 )}
                 <div className="flex justify-between text-base font-medium pt-2 border-t border-gray-200">
                   <span>Total</span>
-                  <span className="text-pink-600">₹{(calculateTotal() + (paymentMethod === "cod" && step >= 3 ? 20 : 0)).toFixed(2)}</span>
+                  <span className="text-pink-600">
+                    ₹
+                    {(
+                      calculateTotal() +
+                      (paymentMethod === "cod" && step >= 3 ? 20 : 0)
+                    ).toFixed(2)}
+                  </span>
                 </div>
               </div>
 
@@ -704,7 +817,8 @@ export default function CheckoutPage() {
                   All prices include GST. Shipping calculated at checkout.
                 </p>
                 <p>
-                  By proceeding, you agree to our Terms of Service and Privacy Policy.
+                  By proceeding, you agree to our Terms of Service and Privacy
+                  Policy.
                 </p>
               </div>
             </div>

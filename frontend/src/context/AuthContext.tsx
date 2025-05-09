@@ -1,5 +1,5 @@
-// src/context/AuthContext.tsx
 "use client";
+
 import React, {
   createContext,
   useContext,
@@ -7,18 +7,16 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
+import axios from "axios";
 
-// Define the structure of the authentication data
 interface AuthContextType {
   user: { token: string; userId: string; role: string } | null;
   login: (token: string, userId: string, role: string) => void;
   logout: () => void;
 }
 
-// Create the AuthContext with a default value of undefined
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Custom hook to use the AuthContext
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (!context) {
@@ -27,7 +25,6 @@ export function useAuth(): AuthContextType {
   return context;
 }
 
-// Define the AuthProvider component
 interface AuthProviderProps {
   children: ReactNode;
 }
@@ -39,30 +36,37 @@ export function AuthProvider({ children }: AuthProviderProps) {
     role: string;
   } | null>(null);
 
-  // Load stored user data from localStorage on app start
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUserId = localStorage.getItem("userId");
     const storedRole = localStorage.getItem("role");
+
     if (storedToken && storedUserId && storedRole) {
       setUser({ token: storedToken, userId: storedUserId, role: storedRole });
+
+      // ✅ Set default token for Axios
+      axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
     }
   }, []);
 
-  // Login function: Store token, userId, and role
   const login = (token: string, userId: string, role: string) => {
     setUser({ token, userId, role });
     localStorage.setItem("token", token);
     localStorage.setItem("userId", userId);
     localStorage.setItem("role", role);
+
+    // Set default token for Axios
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   };
 
-  // Logout function: Clear all user-related data
   const logout = () => {
     setUser(null);
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("role");
+
+    // Remove token from Axios
+    delete axios.defaults.headers.common["Authorization"];
   };
 
   return (

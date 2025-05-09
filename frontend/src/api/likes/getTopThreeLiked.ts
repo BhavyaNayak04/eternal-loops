@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "@/utils/api";
 
 interface Product {
   _id: string;
@@ -20,7 +20,7 @@ type TopLikedProductsResponse = TopLikedProduct[];
 
 export const getTopThreeLiked = async (): Promise<TopLikedProductsResponse> => {
   try {
-    const response = await axios.get(
+    const response = await API.get(
       `${process.env.NEXT_PUBLIC_API_URL}/likes/top`,
       {
         headers: {

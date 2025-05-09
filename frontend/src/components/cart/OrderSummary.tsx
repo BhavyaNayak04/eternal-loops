@@ -1,4 +1,4 @@
-import { CartArrayType } from "@/types/index";
+import { CartArrayType } from "@/utils/types";
 import { ArrowLeft, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 

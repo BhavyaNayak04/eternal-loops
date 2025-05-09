@@ -19,7 +19,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { navigation } from "@/types/index";
+import { navigation } from "@/utils/types";
 import Cart from "./Cart";
 
 export default function Example() {

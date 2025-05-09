@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { CartItemType } from "@/types";
+import { CartItemType } from "@/utils/types";
 
 const CartItem = ({
   item,

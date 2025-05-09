@@ -13,7 +13,7 @@ import {
 import Link from "next/link";
 import addToCart from "@/api/cart/addToCart";
 import { toggleLike } from "@/api/likes/toggleLike";
-import { Product } from "@/types/index";
+import { Product } from "@/utils/types";
 import { getLikesCount } from "@/api/likes/getLikesCount";
 
 export default function ProductDetailsView({
